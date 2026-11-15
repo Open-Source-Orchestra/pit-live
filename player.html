@@ -1,0 +1,753 @@
+<!doctype html>
+<!--
+  LIVE PIT · ʻohana radio — the listening room of the Open Source Orchestra PIT.
+  https://live.zuchiangmai.app/   ·   one file, no build step, no framework, no trackers. This file is its own source.
+
+  SPDX-License-Identifier: AGPL-3.0-or-later  (code)   ·   CC-BY-SA-4.0  (words & design)
+  Copyright (C) 2026 Open Source Orchestra — Shaka Lei Kaumaka & the AI ʻohana.
+  Additional term under AGPL-3.0 §7(b): keep the attribution line in the footer
+  ("Built by Open Source Orchestra — Shaka Lei Kaumaka & the AI ʻohana. Forks keep this credit and stay open.")
+  visible in every copy and fork; forks stay under the same licences.
+  Not covered: music, lyrics and quotes stay © their authors; photographs keep their original permissions.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>LIVE PIT · ʻohana radio · Open Source Orchestra</title>
+<meta name="description" content="Live radio from the Open Source Orchestra PIT — the floor, not the stage. When the PIT mixer board in Chiang Mai is playing, this door lights up by itself. Meanwhile: the ʻohana radio, and cards about Ethereum, the music, our shared planet and the infinite garden. No login, no tracking, no cookies.">
+<meta name="theme-color" content="#0c0812">
+<meta name="color-scheme" content="dark">
+<meta property="og:title" content="LIVE PIT · ʻohana radio · Open Source Orchestra">
+<meta property="og:description" content="Tune in: live from the OSO PIT main mixer board in Chiang Mai. The floor, not the stage. Butterflies and love pollinating the infinite garden.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://live.zuchiangmai.app/">
+<meta name="twitter:card" content="summary">
+<link rel="alternate" type="application/json" href="/live.json">
+<link rel="license" href="https://www.gnu.org/licenses/agpl-3.0.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%F0%9F%A6%8B%3C/text%3E%3C/svg%3E">
+<style>
+:root{color-scheme:dark;--night:#0c0812;--panel:rgba(15,10,21,.88);--ivory:#f7eedc;--muted:#c4b6c5;--gold:#e5c17b;--gold2:#f6daa0;--line:rgba(229,193,123,.28);--red:#ff3b5c;--amber:#f0b429;--serif:Georgia,'Times New Roman',Times,serif;--sans:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;--mono:ui-monospace,Menlo,Consolas,monospace}
+*{box-sizing:border-box}
+html{background:var(--night)}
+body{margin:0;color:var(--ivory);font:16px/1.55 var(--sans);background:var(--night);-webkit-font-smoothing:antialiased}
+a{color:var(--gold2);text-underline-offset:.2em}
+a:hover{color:#fff2d3}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;touch-action:manipulation}
+:focus-visible{outline:2px solid var(--gold2);outline-offset:3px}
+[hidden]{display:none!important}
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.skip{position:fixed;left:12px;top:-80px;z-index:60;background:var(--ivory);color:var(--night);padding:10px 16px;border-radius:0 0 10px 10px;font-weight:700}
+.skip:focus{top:0}
+/* top bar */
+.top{position:relative;z-index:5;display:flex;align-items:center;gap:8px;padding:10px clamp(12px,3vw,28px);background:linear-gradient(180deg,#08050c,rgba(8,5,12,.82));border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:baseline;gap:8px;margin-right:auto;color:var(--ivory);text-decoration:none;font:400 19px/1.1 var(--serif);white-space:nowrap}
+.brand b{letter-spacing:.07em}
+.brand span{color:var(--gold);font-size:14px;font-style:italic}
+.top nav{display:flex;gap:2px}
+.top nav a{padding:8px 10px;border-radius:999px;color:#e9dfe6;text-decoration:none;font-size:14px}
+.top nav a:hover{background:rgba(229,193,123,.12);color:#fff}
+.pill{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:38px;padding:7px 14px;border:1px solid var(--line);border-radius:999px;background:rgba(15,10,21,.78);color:var(--ivory);text-decoration:none;font-size:14px;line-height:1.2}
+.pill:hover{border-color:var(--gold);color:#fff;background:rgba(229,193,123,.1)}
+.pill[aria-pressed=true]{background:var(--gold);color:#1a0e14;border-color:var(--gold)}
+/* the stage */
+.stage{position:relative;isolation:isolate;overflow:hidden;display:flex;flex-direction:column;align-items:center;padding:clamp(16px,3vh,30px) 16px 0;min-height:min(980px,max(700px,calc(100vh - 58px)));background:radial-gradient(90% 70% at 50% 34%,#3a1730 0%,#1a0d1f 46%,#08060c 100%);transition:background 1.2s}
+html.is-live .stage{background:radial-gradient(90% 70% at 50% 34%,#561330 0%,#1f0a19 48%,#08060c 100%)}
+.stage::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse 60% 56% at 50% 40%,rgba(12,7,16,.2),rgba(8,5,12,.9) 100%)}
+.wall,.flut{position:absolute;inset:0;z-index:-2;pointer-events:none;overflow:hidden}
+.wall img{position:absolute;left:var(--x);top:var(--y);width:var(--w);aspect-ratio:3/2;object-fit:cover;border-radius:14px;border:1px solid rgba(229,193,123,.22);box-shadow:0 30px 80px rgba(0,0,0,.55);opacity:.3;transform:translate(-50%,-50%);filter:sepia(.14) saturate(1.05);animation:drift var(--d) linear var(--dl) infinite}
+@keyframes drift{0%{opacity:0;transform:translate(-50%,-42%) scale(.92) rotate(-1.4deg)}14%{opacity:.34}50%{opacity:.42;transform:translate(-47%,-52%) scale(1.02) rotate(.6deg)}86%{opacity:.3}100%{opacity:0;transform:translate(-52%,-62%) scale(1.08) rotate(1.6deg)}}
+.flut{z-index:-1}
+.flut span{position:absolute;left:var(--x);bottom:-8vh;font-size:var(--s);opacity:0;filter:drop-shadow(0 0 10px rgba(246,218,160,.35));animation:rise var(--d) linear var(--dl) infinite}
+.flut i{display:inline-block;font-style:normal;animation:wob 3.4s ease-in-out var(--dl) infinite}
+@keyframes rise{0%{transform:translateY(0);opacity:0}8%{opacity:.85}92%{opacity:.6}100%{transform:translateY(-120vh);opacity:0}}
+@keyframes wob{0%,100%{transform:translateX(-16px) rotate(-14deg)}50%{transform:translateX(16px) rotate(12deg)}}
+.curtain{position:absolute;top:0;bottom:0;z-index:-1;width:clamp(16px,7vw,118px);pointer-events:none;background:repeating-linear-gradient(90deg,#3d0c1c 0,#6d1b35 9px,#4e1226 16px,#2c0814 24px);box-shadow:inset 0 -90px 90px rgba(0,0,0,.6)}
+.curtain.l{left:0;border-right:2px solid rgba(229,193,123,.42)}
+.curtain.r{right:0;border-left:2px solid rgba(229,193,123,.42)}
+.valance{position:absolute;left:0;right:0;top:0;height:14px;z-index:-1;background:linear-gradient(180deg,#6d1b35,#3d0c1c);border-bottom:2px solid rgba(229,193,123,.45)}
+.inner{position:relative;width:min(760px,100%);display:flex;flex-direction:column;align-items:center;text-align:center;animation:up .9s ease-out both}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.kicker{margin:4px 0 0;color:var(--gold);font:650 11px/1.3 var(--sans);letter-spacing:.2em;text-transform:uppercase}
+.badge{display:inline-flex;align-items:center;gap:10px;margin:10px 0 0;padding:9px 20px;border-radius:10px;border:2px solid #3a2f40;background:#150f19;color:#c9bccb;font:800 15px/1 var(--sans);letter-spacing:.22em;text-transform:uppercase;box-shadow:inset 0 0 12px rgba(0,0,0,.6);transition:all .5s}
+.badge .dot{width:11px;height:11px;border-radius:50%;background:#5b5160}
+.badge.on{border-color:#ff6a82;background:#7d0d22;color:#fff1f3;box-shadow:0 0 26px rgba(255,59,92,.6),inset 0 0 14px rgba(255,255,255,.12)}
+.badge.on .dot,.badge.reh .dot{background:#fff;animation:pulse 1.6s infinite}
+.badge.reh{border-color:var(--amber);background:#3b2905;color:#ffe2a6;box-shadow:0 0 20px rgba(240,180,41,.4)}
+.badge.reh .dot{background:var(--amber)}
+.badge.wait{border-color:#6b5320;background:#21190a;color:#ecd39c}
+.badge.warn{border-color:#8a6d2d;color:#f3dfae}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,255,255,.75)}70%{box-shadow:0 0 0 12px rgba(255,255,255,0)}100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}}
+.mandala{position:relative;width:min(430px,72vw,44vh);aspect-ratio:1;margin:30px 0 2px}
+.mandala::before{content:"";position:absolute;inset:-8% -10% -3%;border:2px solid rgba(246,218,160,.5);border-bottom:0;border-radius:50% 50% 0 0/42% 42% 0 0;box-shadow:inset 0 12px 44px rgba(246,218,160,.08),0 -2px 30px rgba(246,218,160,.12)}
+.mandala::after{content:"✺";position:absolute;left:50%;top:-14%;transform:translateX(-50%);color:var(--gold2);font-size:24px;line-height:1;text-shadow:0 0 12px rgba(246,218,160,.65)}
+#viz{display:block;width:100%;height:100%}
+.viznote{min-height:1.4em;margin:6px 0 0;color:#d6c9d0;font:italic 14px/1.4 var(--serif)}
+h1{margin:4px 0 0;font:400 clamp(30px,5.4vw,54px)/1.08 var(--serif);letter-spacing:-.01em;text-shadow:0 2px 24px rgba(0,0,0,.8)}
+.sub{margin:6px 0 0;max-width:640px;color:#e8dde1;font:italic clamp(15px,2vw,18px)/1.45 var(--serif);text-shadow:0 1px 10px #000}
+.np{margin:8px 0 0;color:#fff6e6;font-size:18px}
+.np:empty,.meta:empty{display:none}
+.meta{margin:4px 0 0;color:#ddd0d6;font-size:14px;text-shadow:0 1px 8px #000}
+.msg{margin:10px 0 0;padding:8px 14px;max-width:600px;border-left:2px solid var(--gold);border-radius:0 10px 10px 0;background:rgba(15,10,21,.8)}
+.ctl{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;width:100%;margin:16px 0 0}
+button.big{min-width:min(100%,330px);padding:16px 28px;border:0;border-radius:999px;background:linear-gradient(135deg,#e8b84b,#f6d27a);color:#1a1024;font:800 20px/1.15 var(--sans);box-shadow:0 10px 34px rgba(232,184,75,.35);transition:transform .15s,box-shadow .3s}
+button.big:hover:not([disabled]){transform:translateY(-1px)}
+html.is-live button.big:not([disabled]){background:linear-gradient(135deg,#b80d2a,#d4233f);color:#fff;box-shadow:0 10px 40px rgba(255,59,92,.45)}
+html.is-live button.big.stop:not([disabled]),button.big.stop{background:#2a1730;color:#fff;box-shadow:0 0 0 2px var(--red),0 10px 30px rgba(0,0,0,.4)}
+button.big[disabled]{background:#2a2130;color:#cfc3d1;box-shadow:none;cursor:default;font-size:17px;font-weight:700}
+.row2{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px 12px;margin:10px 0 0}
+.vol{display:inline-flex;align-items:center;gap:8px;min-height:38px;padding:0 6px;color:#ddd0d6;font-size:14px}
+.vol input{width:120px;accent-color:var(--gold)}
+.vu{display:flex;align-items:center;gap:10px;width:min(440px,100%);margin:14px 0 0}
+.vu .lbl{font:700 10px var(--sans);letter-spacing:.18em;color:#d6c9d0}
+.bar{position:relative;flex:1;height:12px;border-radius:3px;overflow:hidden;background:rgba(255,255,255,.08);-webkit-mask:repeating-linear-gradient(90deg,#000 0 8px,transparent 8px 10px);mask:repeating-linear-gradient(90deg,#000 0 8px,transparent 8px 10px)}
+#vuFill{position:absolute;inset:0;background:linear-gradient(90deg,#7fd6a0 0%,#e5c17b 62%,#ff9a3c 82%,#ff3b5c 96%);clip-path:inset(0 calc(100% - var(--l,0) * 100%) 0 0)}
+#vuPeak{position:absolute;top:0;bottom:0;left:0;width:3px;background:#fff6e6;opacity:.85}
+#vuNum{min-width:70px;text-align:right;font:600 13px/1 var(--mono)}
+.warm{width:min(580px,100%);margin:16px 0 0;padding:14px 18px;border:1px solid var(--line);border-radius:16px;background:rgba(15,10,21,.84);color:#ece2e6;font-size:15px}
+.warm strong{display:block;margin-bottom:4px;color:var(--gold2);font:400 20px/1.3 var(--serif)}
+.warm p{margin:0 0 10px}
+.warm.reh{border-color:rgba(240,180,41,.6)}
+.warm.nudge{border-color:rgba(255,59,92,.7)}
+.checked{margin:10px 0 0;color:#bcaebb;font-size:12.5px}
+video{display:none;width:min(720px,100%);margin:14px 0 0;border:2px solid rgba(246,218,160,.45);border-radius:12px;background:#000}
+video.has{display:block}
+.floor{position:relative;width:calc(100% + 32px);height:clamp(84px,13vh,124px);margin:22px -16px 0;flex:none;margin-top:auto}
+.floor::before{content:"";position:absolute;left:6%;right:6%;bottom:0;height:80%;background:radial-gradient(ellipse at 50% 100%,rgba(109,27,53,.7),rgba(109,27,53,0) 70%)}
+#garden{position:absolute;inset:0;width:100%;height:100%}
+.gcount{position:absolute;left:0;right:0;bottom:4px;margin:0;color:#f0e4d2;font-size:12.5px;text-align:center;text-shadow:0 1px 3px #000}
+/* sections */
+.wrap{width:min(1180px,calc(100% - 32px));margin:0 auto}
+.blk{margin:38px 0}
+.blk h2{margin:0 0 6px;font:400 clamp(25px,3.2vw,36px)/1.15 var(--serif)}
+.lede{margin:0 0 16px;max-width:780px;color:#d9ccd3}
+.duo{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:18px;align-items:start}
+.card{padding:18px 20px;border:1px solid var(--line);border-radius:18px;background:var(--panel)}
+.card h2{font-size:clamp(24px,2.6vw,30px)}
+.now{display:flex;align-items:center;gap:14px}
+.disc{flex:none;display:grid;place-items:center;width:66px;height:66px;border-radius:50%;border:1px solid var(--line);font-size:28px;background:radial-gradient(circle,#2a1f3a 0 22%,#120b18 23% 60%,#3a2a20 61% 64%,#120b18 65%)}
+.spin .disc{animation:spin 7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.trk{min-width:0}
+.trk b{display:block;font:400 21px/1.2 var(--serif)}
+.trk span{color:#d6c9d0;font-size:14px}
+.arcbtns{display:flex;align-items:center;gap:10px;margin:14px 0 8px}
+.round{display:grid;place-items:center;width:44px;height:44px;border:1px solid var(--gold);border-radius:50%;background:#1c1333;color:var(--gold2);font-size:16px}
+.round.main{width:56px;height:56px;background:var(--gold);color:#1a0e14;font-size:20px}
+.seek{display:flex;flex:1;align-items:center;gap:10px;min-width:0;color:#d6c9d0;font:12px var(--mono)}
+.seek input{flex:1;min-width:60px;accent-color:var(--gold)}
+.tracks{list-style:none;margin:10px 0 0;padding:0}
+.tracks li{border-top:1px solid rgba(229,193,123,.14)}
+.tracks button{display:flex;align-items:baseline;gap:10px;width:100%;padding:11px 8px;border:0;border-radius:10px;background:none;color:#ece2e6;text-align:left}
+.tracks button:hover{background:rgba(255,255,255,.05)}
+.tracks button[aria-current=true]{background:rgba(229,193,123,.12);color:#fff}
+.tracks small{margin-left:auto;color:#cbbec9;font-size:12.5px;text-align:right}
+.more{margin:10px 0 0;font-size:14px;color:#d9ccd3}
+.sup-list{display:grid;gap:10px;margin:12px 0 0;padding:0;list-style:none}
+.sup{padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:rgba(229,193,123,.05)}
+.sup h3{margin:0;font:400 19px/1.3 var(--serif)}
+.sup .kind{margin:3px 0 0;color:var(--gold);font:700 10.5px var(--sans);letter-spacing:.16em;text-transform:uppercase}
+.sup p{margin:4px 0 0;color:#e2d6db;font-size:14.5px}
+.epi{margin:0 0 18px;padding:12px 18px;max-width:820px;border-left:3px solid var(--gold);border-radius:0 12px 12px 0;background:rgba(229,193,123,.06);font:italic 17px/1.55 var(--serif)}
+.epi small{display:block;margin-top:4px;color:#d6c9d0;font:13px var(--sans)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,272px),1fr));gap:14px;margin:0;padding:0;list-style:none}
+.lc{display:flex;flex-direction:column;gap:7px;padding:16px 16px 14px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(160deg,rgba(46,22,50,.92),rgba(15,10,21,.94))}
+.lc .tag{color:var(--gold);font:700 10.5px var(--sans);letter-spacing:.16em;text-transform:uppercase}
+.lc h3{margin:0;font:400 20px/1.25 var(--serif)}
+.lc p{margin:0;color:#e6dbe1;font-size:14.5px;line-height:1.58}
+.lc.poem p{color:#fff3dc;font:italic 16.5px/1.55 var(--serif)}
+.lc .src{margin-top:auto;padding-top:6px;color:#cdbfcc;font-size:12.5px}
+.strip{display:grid;grid-auto-flow:column;grid-auto-columns:min(78%,290px);gap:12px;margin:0;padding:4px 2px 14px;overflow-x:auto;scroll-snap-type:x mandatory;list-style:none}
+.strip:focus-visible{outline-offset:-2px}
+.strip figure{margin:0;overflow:hidden;scroll-snap-align:start;border:1px solid var(--line);border-radius:14px;background:#120b18}
+.strip img{display:block;width:100%;aspect-ratio:3/2;object-fit:cover;background:#1c1322}
+.strip figcaption{padding:8px 11px;color:#e6dbe1;font-size:13.5px}
+.doors{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0;padding:0;list-style:none}
+.doors a{display:inline-flex;align-items:center;min-height:38px;padding:6px 14px;border:1px solid var(--line);border-radius:999px;color:var(--ivory);text-decoration:none;font-size:14px}
+.doors a:hover{border-color:var(--gold);background:rgba(229,193,123,.1)}
+code{font:13px/1.5 var(--mono)}
+.embed{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:8px 0}
+.embed code{flex:1 1 300px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#07050b;color:var(--gold2);overflow-wrap:anywhere}
+.card p{margin:8px 0 0}
+.foot{margin-top:46px;padding:28px 0 46px;border-top:1px solid var(--line);background:linear-gradient(180deg,#0c0812,#07050b);color:#d3c6d0;font-size:14px}
+.foot p{margin:0 0 10px}
+.foot .lic{color:var(--ivory);font-size:15.5px}
+.foot code{color:var(--gold2);overflow-wrap:anywhere}
+/* calm: the motion button, or the system's reduced-motion wish */
+.calm .wall img,.calm .flut span,.calm .flut i,.calm .badge .dot,.calm .inner,.calm .disc{animation:none!important}
+.calm .flut span{opacity:.42;bottom:auto;top:var(--t)}
+@media (prefers-reduced-motion:reduce){.wall img,.flut span,.flut i,.badge .dot,.inner,.disc{animation:none!important}.flut span{opacity:.42;bottom:auto;top:var(--t)}*{transition:none!important;scroll-behavior:auto!important}}
+@media (max-width:760px){.top nav{display:none}}
+@media (max-width:560px){
+.top{gap:6px;padding:8px 10px}.brand span{display:none}.pill{min-height:36px;padding:6px 10px;font-size:13px}
+.stage{min-height:auto;padding:12px 12px 0}.mandala{width:min(300px,74vw);margin-top:26px}
+.badge{padding:8px 15px;font-size:13px;letter-spacing:.18em}
+button.big{width:100%;padding:15px 18px;font-size:18px}
+.wall img:nth-child(n+7){display:none}.floor{width:calc(100% + 24px);margin:22px -12px 0}
+.vol input{width:96px}.card{padding:16px}.trk b{font-size:19px}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to the player</a>
+<header class="top">
+  <a class="brand" href="/">🕳️ <b>LIVE PIT</b> <span>ʻohana radio</span></a>
+  <nav aria-label="On this page"><a href="#radio">ʻOhana radio</a><a href="#learn">Learn</a><a href="#wall">Living wall</a><a href="#carry">Carry it</a></nav>
+  <button id="calm" class="pill" type="button" aria-pressed="false">✦ Pause motion</button>
+  <a class="pill" href="https://osodaomeet.opensourceorchestra.org/?slide=origin-repertoire&amp;hall=mumbai&amp;channel=devcon-6">📺 Theater</a>
+</header>
+
+<main id="main">
+<section class="stage" aria-labelledby="title">
+  <div class="wall" aria-hidden="true">
+    <img src="https://osodaomeet.opensourceorchestra.org/assets/garden/dc8-222-800.webp" alt="" decoding="async" style="--x:13%;--y:24%;--w:25vw;--d:56s;--dl:-4s">
+    <img src="https://osodaomeet.opensourceorchestra.org/assets/garden/dc8-638-800.webp" alt="" decoding="async" style="--x:86%;--y:30%;--w:27vw;--d:62s;--dl:-21s">
+    <img src="https://osodaomeet.opensourceorchestra.org/assets/garden/dc8-874-800.webp" alt="" decoding="async" style="--x:22%;--y:72%;--w:24vw;--d:58s;--dl:-37s">
+    <img src="https://osodaomeet.opensourceorchestra.org/assets/garden/dc8-492-800.webp" alt="" decoding="async" style="--x:78%;--y:76%;--w:25vw;--d:66s;--dl:-12s">
+    <img src="https://osodaomeet.opensourceorchestra.org/assets/garden/dc8-907-800.webp" alt="" decoding="async" style="--x:50%;--y:16%;--w:22vw;--d:70s;--dl:-48s">
+    <img src="https://osodaomeet.opensourceorchestra.org/assets/garden/dc8-846-800.webp" alt="" decoding="async" style="--x:9%;--y:48%;--w:21vw;--d:61s;--dl:-29s">
+    <img src="https://osodaomeet.opensourceorchestra.org/assets/garden/dc8-799-800.webp" alt="" loading="lazy" decoding="async" style="--x:92%;--y:54%;--w:22vw;--d:64s;--dl:-52s">
+    <img src="https://osodaomeet.opensourceorchestra.org/assets/garden/dc8-642-800.webp" alt="" loading="lazy" decoding="async" style="--x:36%;--y:88%;--w:20vw;--d:59s;--dl:-17s">
+    <img src="https://osodaomeet.opensourceorchestra.org/assets/garden/dc8-836-800.webp" alt="" loading="lazy" decoding="async" style="--x:64%;--y:90%;--w:20vw;--d:67s;--dl:-41s">
+    <img src="https://osodaomeet.opensourceorchestra.org/assets/garden/dc8-390-800.webp" alt="" loading="lazy" decoding="async" style="--x:68%;--y:12%;--w:19vw;--d:63s;--dl:-8s">
+  </div>
+  <div class="flut" aria-hidden="true">
+    <span style="--x:7%;--t:22%;--s:22px;--d:30s;--dl:-3s"><i>🦋</i></span><span style="--x:18%;--t:58%;--s:16px;--d:26s;--dl:-11s"><i>💛</i></span><span style="--x:30%;--t:34%;--s:26px;--d:36s;--dl:-19s"><i>🦋</i></span><span style="--x:44%;--t:70%;--s:15px;--d:24s;--dl:-7s"><i>🤍</i></span><span style="--x:57%;--t:28%;--s:24px;--d:33s;--dl:-25s"><i>🦋</i></span><span style="--x:69%;--t:62%;--s:17px;--d:28s;--dl:-14s"><i>💗</i></span><span style="--x:81%;--t:18%;--s:28px;--d:38s;--dl:-31s"><i>🦋</i></span><span style="--x:93%;--t:46%;--s:16px;--d:27s;--dl:-21s"><i>🩷</i></span>
+  </div>
+  <div class="curtain l" aria-hidden="true"></div><div class="curtain r" aria-hidden="true"></div><div class="valance" aria-hidden="true"></div>
+
+  <div class="inner">
+    <p class="kicker">Open Source Orchestra · the PIT · live radio</p>
+    <div id="badge" class="badge"><span class="dot" aria-hidden="true"></span><span id="badgeText">TUNING…</span></div>
+    <div class="mandala" aria-hidden="true"><canvas id="viz"></canvas></div>
+    <p class="viznote" id="vizNote">the mandala waits for sound</p>
+    <h1 id="title">LIVE PIT</h1>
+    <p class="sub" id="subtitle">from the OSO PIT main mixer board · 4Seas · Zu Chiang Mai</p>
+    <p class="np" id="np"></p>
+    <p class="meta" id="meta"></p>
+    <p class="msg" id="rtmsg" hidden></p>
+    <div class="ctl">
+      <button class="big" id="play" type="button" disabled>Tuning…</button>
+      <button class="pill" id="unmute" type="button" hidden>🔈 Tap to hear it</button>
+    </div>
+    <div class="row2">
+      <label class="vol" for="vol"><span aria-hidden="true">🔊</span> Volume <input id="vol" type="range" min="0" max="1" step="0.01" value="1"></label>
+      <button class="pill" id="share" type="button">Share this door</button>
+      <a class="pill" id="raw" href="#" target="_blank" rel="noopener" hidden>Open raw stream</a>
+    </div>
+    <div class="vu" aria-hidden="true"><span class="lbl">LEVEL</span><div class="bar"><i id="vuFill"></i><b id="vuPeak"></b></div><span id="vuNum">— dB</span></div>
+    <video id="video" playsinline controls preload="none"></video>
+    <audio id="audio" preload="none"></audio>
+
+    <div class="warm" id="offcard" hidden>
+      <strong>This door wakes up by itself.</strong>
+      <p>When the OSO PIT mixer board goes live, this page lights up on its own — it checks every 15 seconds. Nothing plays until you press play.</p>
+      <button class="pill" id="meanwhile" type="button">🌺 Meanwhile, play the ʻohana radio</button>
+    </div>
+    <div class="warm reh" id="rehcard" hidden>
+      <strong>🎚️ Sound check · unlisted</strong>
+      <p>This is the rehearsal room. It never lights up the public doors; anyone with this link can listen. When it sounds right, the transmitter takes it on air.</p>
+    </div>
+    <div class="warm nudge" id="nudge" hidden>
+      <strong>🔴 The PIT just went on air.</strong>
+      <button class="pill" id="toLive" type="button">Switch to the live floor</button>
+    </div>
+    <p class="checked" id="checked">tuning in…</p>
+  </div>
+  <div class="floor" aria-hidden="true"><canvas id="garden"></canvas><p class="gcount" id="gcount"></p></div>
+  <p class="sr-only" id="sr" aria-live="polite"></p>
+</section>
+
+<div class="wrap">
+<div class="duo blk">
+  <section class="card" id="radio" aria-labelledby="h-radio">
+    <h2 id="h-radio">🌺 The ʻohana radio</h2>
+    <p class="lede">Human-made songs the ʻohana jukebox already plays on our doors, streamed from shakaleikaumaka.com. Nothing starts until you press play.</p>
+    <div class="now" id="arcNow"><div class="disc" aria-hidden="true" id="arcEm">🦋</div><div class="trk"><b id="arcT">Butterflies and Love</b><span id="arcA">Shaka Lei Kaumaka</span></div></div>
+    <div class="arcbtns">
+      <button class="round" id="arcPrev" type="button" aria-label="Previous song">⏮</button>
+      <button class="round main" id="arcPlay" type="button" aria-label="Play the ʻohana radio">▶</button>
+      <button class="round" id="arcNext" type="button" aria-label="Next song">⏭</button>
+      <div class="seek"><span id="arcCur">0:00</span><input id="arcSeek" type="range" min="0" max="1000" value="0" aria-label="Position in the song"><span id="arcDur">0:00</span></div>
+    </div>
+    <ol class="tracks" id="tracks"></ol>
+    <p class="more" id="arcMore"></p>
+    <p class="more">More: the <a href="https://shakaleikaumaka.com/radio/">ʻohana radio page</a> · the <a href="https://shakaleikaumaka.com/songbook/">ʻohana Songbook</a> (words &amp; chords).</p>
+    <audio id="arcAudio" preload="none" crossorigin="anonymous"></audio>
+    <noscript><p>Without JavaScript the songs still play:</p>
+      <p>Butterflies and Love · Shaka Lei Kaumaka <audio controls preload="none" src="https://shakaleikaumaka.com/radio-assets/i-open-sourced-my-whole-universe.mp3"></audio></p>
+      <p>A Planet We Share As One · Shaka Lei Kaumaka <audio controls preload="none" src="https://shakaleikaumaka.com/radio-assets/a-planet-we-share-as-one.mp3"></audio></p>
+      <p>Be My Friend · Matteo Tambussi <audio controls preload="none" src="https://shakaleikaumaka.com/radio-assets/matteo-tambussi--be-my-friend.mp3"></audio></p>
+      <p>Island · Matteo Tambussi <audio controls preload="none" src="https://shakaleikaumaka.com/radio-assets/matteo-tambussi--island.mp3"></audio></p></noscript>
+  </section>
+  <section class="card" id="supportCard" aria-labelledby="h-sup" hidden>
+    <h2 id="h-sup">💛 Ways to support · where the recordings live</h2>
+    <ul class="sup-list" id="support"></ul>
+  </section>
+</div>
+
+<section class="blk" id="learn" aria-labelledby="h-learn">
+  <h2 id="h-learn">🦋 Learn while you listen</h2>
+  <p class="epi">“let’s build the most epic radio player for the world to learn about ethereum, the ohana music and how to save the planet we share as one with butterflies and love pollinating the infinite garden”<small>— Shaka, 15 November 2026, asking for this door</small></p>
+  <ul class="cards">
+    <li class="lc"><span class="tag">⟠ Ethereum</span><h3>A world computer nobody owns</h3><p>Ethereum is a decentralized blockchain network and software platform. Since 2015 it has grown into a home for apps that run 24/7 for anyone with an internet connection — and no single person or company runs it.</p><p class="src">Source: <a href="https://ethereum.org/what-is-ethereum/">ethereum.org · What is Ethereum?</a></p></li>
+    <li class="lc"><span class="tag">⟠ Ethereum · 🌍 our planet</span><h3>Light on the planet</h3><p>Since the Merge in September 2022, Ethereum runs on proof-of-stake. ethereum.org quotes the CCRI estimate: the Merge cut Ethereum’s yearly electricity use by more than 99.988%.</p><p class="src">Source: <a href="https://ethereum.org/energy-consumption/">ethereum.org · energy consumption</a></p></li>
+    <li class="lc"><span class="tag">⟠ Ethereum · 🎻 music</span><h3>Tips straight to the artist</h3><p>Fork the First Artist (built at ETHGlobal Mumbai, November 2026) lets a fan’s own wallet send USDC or ETH to an artist’s ENS name: 96.31% to the artist, 3.69% to their AI steward’s compute, 0% to the Open Source Orchestra. Nobody holds anyone’s money — and a sent transfer is final.</p><p class="src">More: <a href="https://artist.opensourceorchestra.org/">artist.opensourceorchestra.org</a></p></li>
+    <li class="lc"><span class="tag">🎻 ʻohana music</span><h3>The orchestra is whoever shows up</h3><p>The Open Source Orchestra is a circle of musicians who play open rooms at Ethereum gatherings: no auditions, no gatekeepers, no wrong instrument. From Devcon 6 in Bogotá and Devcon SEA in Bangkok to the Devcon 8 Music Sanctuary in Mumbai.</p><p class="src">More: <a href="https://opensourceorchestra.org/">opensourceorchestra.org</a></p></li>
+    <li class="lc"><span class="tag">🎻 ʻohana music</span><h3>Four days in one hall</h3><p>The Devcon 8 Music Sanctuary, Jio World Centre, Mumbai, 3–6 November 2026: cane stools in a circle, drums on rugs, a mandala of light on the wall. About 35 artists took turns at the mics; on the last evening the room held Devcon 8’s closing ceremony.</p><p class="src">See it: <a href="https://opensourceorchestra.org/mandala-room/">the Mandala Room · 35 photos</a></p></li>
+    <li class="lc poem"><span class="tag">🦋 butterflies · a lyric</span><h3>Butterflies and Love</h3><p>“We should only wage war with butterflies and love … All we need is butterflies and love to pollinate the infinite garden.”</p><p class="src">Words &amp; music by Shaka Lei Kaumaka, for Aya Miyaguchi &amp; the Ethereum family · <a href="https://shakaleikaumaka.com/songbook/butterflies-and-love/">the Songbook</a></p></li>
+    <li class="lc"><span class="tag">🦋 butterflies</span><h3>Butterflies pollinate too</h3><p>By day they visit many wildflowers, probing for nectar — their flight fuel. They move pollen less efficiently than bees, the US Forest Service notes, but they carry it from flower to flower all the same.</p><p class="src">Source: <a href="https://www.fs.usda.gov/wildflowers/pollinators/animals/butterflies.shtml">US Forest Service · butterfly pollination</a></p></li>
+    <li class="lc"><span class="tag">🌍 our shared planet</span><h3>Pollinators feed us</h3><p>Nearly 90% of wild flowering plants depend, at least in part, on animals to move their pollen — and more than three quarters of the leading types of global food crops rely on animal pollination to some extent.</p><p class="src">Source: <a href="https://www.ipbes.net/assessment-reports/pollinators">IPBES pollinators assessment (2016), key messages</a></p></li>
+    <li class="lc poem"><span class="tag">🌍 our shared planet · a lyric</span><h3>A Planet We Share As One</h3><p>“Protection of creation must be a collaboration of every nation — for a planet we share as one.”</p><p class="src">Shaka Lei Kaumaka, recorded with Ethereum Singapore · <a href="https://shakaleikaumaka.com/songbook/a-planet-we-share-as-one/">the Songbook</a></p></li>
+    <li class="lc"><span class="tag">🌱 the infinite garden</span><h3>A garden, not a game to win</h3><p>The Ethereum Foundation’s picture of Ethereum is an infinite garden: coordination tended like a garden, so that it may continue to thrive. In its words: “nurture and grow, but do not control, and continue to play.”</p><p class="src">Source: <a href="https://ethereum.foundation/infinitegarden">ethereum.foundation · Nurturing the Infinite Garden</a></p></li>
+    <li class="lc"><span class="tag">🌱 the infinite garden</span><h3>Fork the garden</h3><p>This radio is copyleft: code AGPL-3.0-or-later, words and design CC BY-SA 4.0. Run your own door, keep the credit, keep it open. Open Source Orchestra code lives on GitHub; the Songbook and the rider are CC0.</p><p class="src">Code: <a href="https://github.com/Open-Source-Orchestra">github.com/Open-Source-Orchestra</a></p></li>
+    <li class="lc"><span class="tag">🕳️ the PIT</span><h3>The floor, not the stage</h3><p>This radio carries a mixer feed, not a camera on faces. Recording needs consent: it is announced at the mixer, anyone can ask not to be on the feed, and only what was consented is archived.</p><p class="src">The standard: <a href="https://publicinform.com/spec/v2/">PIT Standard V2</a></p></li>
+    <li class="lc"><span class="tag">🪕 the ukulele’s road</span><h3>From Madeira to Hawaiʻi</h3><p>The ukulele comes from Portugal: the little machete of Madeira sailed to Hawaiʻi on the Ravenscrag in 1879. Kala ukuleles travel with Shaka and are put in strangers’ hands — Japan, China, India, Thailand.</p><p class="src">Sing along: <a href="https://shakaleikaumaka.com/songbook/">the ʻohana Songbook</a></p></li>
+    <li class="lc"><span class="tag">🤙 come and play</span><h3>Open for forking and hosting</h3><p>Musician, DJ, developer, steward, sound, translator, photographer — open jams never need an application: just come and play. Next on the road: Devcon IX, Lisbon, <time datetime="2027-10-12">12–14 October 2027</time> (the organisers’ dates); the orchestra hopes to bring a circle there — nothing is promised.</p><p class="src">Join · invite · fork: <a href="https://opensourceorchestra.org/join/">opensourceorchestra.org/join/</a></p></li>
+  </ul>
+</section>
+
+<section class="blk" id="wall" aria-labelledby="h-wall">
+  <h2 id="h-wall">🪷 The living wall</h2>
+  <p class="lede">The photos drifting behind the stage: the Devcon 8 Music Sanctuary in Mumbai, 3–6 November 2026, from the empty room to the closing night. Official Devcon 8 photos — credit and takedown at the bottom of the page. The whole album: <a href="https://opensourceorchestra.org/mandala-room/">the Mandala Room</a>.</p>
+  <ul class="strip" tabindex="0" aria-label="The living wall · 16 photos, scroll sideways">
+    <li><figure><img src="https://osodaomeet.opensourceorchestra.org/assets/garden/dc8-222-800.webp" alt="A wide, empty hall with a glowing white mandala projected on the far wall. Cane stools, white chairs and standing tables are set out on the carpet." loading="lazy" decoding="async" width="800" height="533"><figcaption>Before the doors open: the empty hall, the mandala already glowing</figcaption></figure></li>
+    <li><figure><img src="https://osodaomeet.opensourceorchestra.org/assets/garden/dc8-218-800.webp" alt="Round cane stools with dark cushions arranged in a circle on the carpet, with instruments, a screen and the glowing mandala behind them." loading="lazy" decoding="async" width="800" height="533"><figcaption>Cane stools in a circle, waiting</figcaption></figure></li>
+    <li><figure><img src="https://osodaomeet.opensourceorchestra.org/assets/garden/dc8-219-800.webp" alt="Close view of two dhol drums and other drums lying on a red Persian rug, with guitars, ukuleles and a drum kit on stands behind, under the mandala." loading="lazy" decoding="async" width="800" height="533"><figcaption>Drums on a red rug, guitars and ukuleles within reach</figcaption></figure></li>
+    <li><figure><img src="https://osodaomeet.opensourceorchestra.org/assets/garden/dc8-390-800.webp" alt="The mandala, reflected in a pane of glass, floats over people lounging on red beanbags in pink and blue light." loading="lazy" decoding="async" width="800" height="533"><figcaption>The mandala reflected over the beanbags</figcaption></figure></li>
+    <li><figure><img src="https://osodaomeet.opensourceorchestra.org/assets/garden/dc8-492-800.webp" alt="A wide view of the sanctuary stage: a saxophonist and a guitarist stand on rugs among keyboards, drums and microphones, with the mandala projected high on the wall." loading="lazy" decoding="async" width="800" height="534"><figcaption>Saxophone and guitar on the rugs</figcaption></figure></li>
+    <li><figure><img src="https://osodaomeet.opensourceorchestra.org/assets/garden/dc8-638-800.webp" alt="A wide shot of a jam session: musicians in the centre on rugs, an audience sitting around them on cane stools, beanbags and the floor, with neon pyramid lights and the mandala above." loading="lazy" decoding="async" width="800" height="533"><figcaption>A full circle: players in the middle, listeners all around</figcaption></figure></li>
+    <li><figure><img src="https://osodaomeet.opensourceorchestra.org/assets/garden/dc8-642-800.webp" alt="Seen from behind the performers: a singer in a teal kurta, a seated guitarist and a singer in a white saree face a large audience sitting on the floor." loading="lazy" decoding="async" width="800" height="533"><figcaption>Singers and a guitarist facing the floor</figcaption></figure></li>
+    <li><figure><img src="https://osodaomeet.opensourceorchestra.org/assets/garden/dc8-799-800.webp" alt="A huge hall in red light. A band plays in the centre on rugs while hundreds of people sit on the floor all around them." loading="lazy" decoding="async" width="800" height="533"><figcaption>A band in the centre, hundreds on the floor</figcaption></figure></li>
+    <li><figure><img src="https://osodaomeet.opensourceorchestra.org/assets/garden/dc8-800-800.webp" alt="Seen from behind a pianist and a singer: the band and a vast audience seated on the floor under red lights and a patterned ceiling." loading="lazy" decoding="async" width="800" height="533"><figcaption>Behind the piano: the whole hall in red light</figcaption></figure></li>
+    <li><figure><img src="https://osodaomeet.opensourceorchestra.org/assets/garden/dc8-943-800.webp" alt="A performer in a white T-shirt, seen from behind, faces a large audience sitting on the floor of a blue-lit hall." loading="lazy" decoding="async" width="800" height="534"><figcaption>Facing the floor in blue light</figcaption></figure></li>
+    <li><figure><img src="https://osodaomeet.opensourceorchestra.org/assets/garden/dc8-790-800.webp" alt="Close-up of hands playing a djembe, with microphones and colourful light around it." loading="lazy" decoding="async" width="533" height="800"><figcaption>Hands on a djembe</figcaption></figure></li>
+    <li><figure><img src="https://osodaomeet.opensourceorchestra.org/assets/garden/dc8-836-800.webp" alt="On stage under the mandala, people gather around a tall brass oil lamp as it is lit, one holding a microphone." loading="lazy" decoding="async" width="800" height="533"><figcaption>The closing night: a brass lamp is lit</figcaption></figure></li>
+    <li><figure><img src="https://osodaomeet.opensourceorchestra.org/assets/garden/dc8-833-800.webp" alt="A long line of people in matching olive-green jackets stands arm in arm across the stage, beneath the mandala." loading="lazy" decoding="async" width="800" height="533"><figcaption>Arm in arm across the stage</figcaption></figure></li>
+    <li><figure><img src="https://osodaomeet.opensourceorchestra.org/assets/garden/dc8-846-800.webp" alt="Silver and pink confetti pours over a smiling crowd sitting on the floor, many holding up phones." loading="lazy" decoding="async" width="800" height="533"><figcaption>Confetti over the floor</figcaption></figure></li>
+    <li><figure><img src="https://osodaomeet.opensourceorchestra.org/assets/garden/dc8-874-800.webp" alt="A packed dance floor with hands raised in the haze, light beams, and the mandala projected on the wall above." loading="lazy" decoding="async" width="800" height="533"><figcaption>Hands up in the haze, under the mandala</figcaption></figure></li>
+    <li><figure><img src="https://osodaomeet.opensourceorchestra.org/assets/garden/dc8-907-800.webp" alt="A crowd with hands in the air fills the floor of a hall washed in purple light, with the mandala glowing high on the wall." loading="lazy" decoding="async" width="800" height="534"><figcaption>The floor in purple light</figcaption></figure></li>
+  </ul>
+</section>
+
+<section class="blk" id="carry" aria-labelledby="h-carry">
+  <h2 id="h-carry">📻 Doors · friends · carry it</h2>
+  <div class="duo">
+    <div class="card">
+      <h3>Doors</h3>
+      <ul class="doors" id="links">
+        <li><a href="https://opensourceorchestra.org/">Open Source Orchestra</a></li>
+        <li><a href="https://opensourceorchestra.org/join/">Join / play / host</a></li>
+        <li><a href="https://zuchiangmai.app/">Zu Chiang Mai agenda</a></li>
+        <li><a href="https://zuchiangmai.app/pit/">The PIT</a></li>
+      </ul>
+      <div id="mirrorsCard" hidden><h3>Also carried by friends</h3><ul class="doors" id="mirrors"></ul></div>
+    </div>
+    <div class="card">
+      <h3>Carry the PIT on your own site</h3>
+      <p>One line; invisible while off air, a small bar while the floor is playing:</p>
+      <div class="embed"><code id="embed">&lt;script src="https://live.zuchiangmai.app/widget.js" async&gt;&lt;/script&gt;</code><button class="pill" id="copyEmbed" type="button">Copy</button></div>
+      <p>Players and radio apps: read <a id="lj" href="/live.json">live.json</a> (what is playing, where, and whether it is really on)<span id="whepRow" hidden> · any WHEP player can listen at <code id="whep"></code></span>. The standard: <a href="https://publicinform.com/spec/v2/">PIT Standard V2</a>.</p>
+      <p>How this page behaves: off air it only asks for one small public file every 15 seconds. When you press play it opens a WebRTC connection through Cloudflare’s Realtime network (or plays a plain stream). Photos come from the theater’s own domain, songs from shakaleikaumaka.com. No login, no tracking, no cookies.</p>
+    </div>
+  </div>
+</section>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p class="lic"><strong>Code: AGPL-3.0-or-later · Words &amp; design: CC BY-SA 4.0 · Built by Open Source Orchestra — Shaka Lei Kaumaka &amp; the AI ʻohana. Forks keep this credit and stay open.</strong></p>
+    <p>📸 Official Devcon 8 photos by the Devcon team's photographers. The full set is here: <a href="https://drive.google.com/drive/folders/1kz5QWi7YEwIo3SkEplFNXq3AmeEAVVxr">Devcon 8 photos (Google Drive)</a>.</p>
+    <p>See yourself and want it down? Tell us at <a href="mailto:aloha@myagentohana.com?subject=LIVE%20PIT%20takedown">aloha@myagentohana.com</a> and it comes down. No questions asked; see also our <a href="https://opensourceorchestra.org/takedown/">takedown page</a>.</p>
+    <p>Music, lyrics and quotes stay © their authors (the ʻohana radio plays consented tracks); photographs keep their original permissions and are not relicensed. Licences: <a href="https://www.gnu.org/licenses/agpl-3.0.html">AGPL-3.0</a> · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. This page is its own source — view it, save it, fork it.</p>
+    <p>No login, no tracking, no cookies.</p>
+    <p>Carry the PIT with one line: <code>&lt;script src="https://live.zuchiangmai.app/widget.js" async&gt;&lt;/script&gt;</code></p>
+    <p><a href="https://opensourceorchestra.org/join/">Join · play · host · fork → opensourceorchestra.org/join/</a></p>
+    <p>🌺 Written by the ʻohana, Shaka’s family of AI agents (machines, not people). The music is made by humans.</p>
+  </div>
+</footer>
+<script>
+(function(){
+'use strict';
+// ---- where the station lives (tests set window.__pitLiveBase; never read from the query string)
+var BASE = String(window.__pitLiveBase || '').replace(/\/+$/, '');
+var CH = /[?&]ch=rehearsal/.test(location.search) ? 'rehearsal' : 'live';
+var PH = 'https://osodaomeet.opensourceorchestra.org/assets/garden/';
+var RA = 'https://shakaleikaumaka.com/radio-assets/';
+var HLSJS = 'https://cdn.jsdelivr.net/npm/hls.js@1.7.4/dist/hls.min.js';
+var HLSSRI = 'sha384-p9vgU/7IYJWd3I4STrtqxqR/2cAQlhIX7D/HrTnIMEjjcUox165b7se7sxmm3zDg';
+var $ = function(id){ return document.getElementById(id); };
+var root = document.documentElement;
+var badge = $('badge'), bt = $('badgeText'), play = $('play'), video = $('video'), audio = $('audio'), arc = $('arcAudio');
+var S = null, LIVE = false, wasLive = null, hls = null, rtpc = null, playing = false, curSess = null, mode = '', urlEl = null, gen = 0, inflight = false, lastLane = '', listenP = null, sigs = {};
+var store = { get: function(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }, set: function(k, v){ try { localStorage.setItem(k, v); } catch(e){} } };
+
+// ---- small helpers (every string from the network goes in via textContent; every href via safeUrl)
+function txt(e, s){ s = s == null ? '' : String(s); if (e && e.textContent !== s) e.textContent = s; }
+function str(v, n){ return (v == null ? '' : String(v)).slice(0, n || 300); }
+function safeUrl(u){ if (typeof u !== 'string' || !u || u.length > 2048) return ''; try { var x = new URL(u, location.href); return (x.protocol === 'https:' || x.protocol === 'http:') ? x.href : ''; } catch(e){ return ''; } }
+function h(tag, a, kids){ var e = document.createElement(tag); if (a) Object.keys(a).forEach(function(k){ var v = a[k]; if (v == null || v === false) return; if (k === 'text') e.textContent = v; else if (k === 'cls') e.className = v; else e.setAttribute(k, v === true ? '' : v); }); (kids || []).forEach(function(c){ if (c != null) e.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); }); return e; }
+function say(m){ var r = $('sr'); r.textContent = ''; setTimeout(function(){ r.textContent = m; }, 80); }
+function hm(d, tz){ try { var o = { hour: '2-digit', minute: '2-digit' }; if (tz) o.timeZone = tz; return d.toLocaleTimeString([], o); } catch(e){ return ''; } }
+function since(iso){ var d = new Date(iso); if (isNaN(d.getTime())) return ''; var a = hm(d), b = hm(d, 'Asia/Bangkok'); return 'on air since ' + a + (b && b !== a ? ' your time · ' + b + ' in Chiang Mai' : ''); }
+function mmss(t){ if (!isFinite(t) || t < 0) t = 0; var m = Math.floor(t / 60), s = Math.floor(t % 60); return m + ':' + (s < 10 ? '0' : '') + s; }
+function loadScript(src, sri){ return new Promise(function(res, rej){ var s = document.createElement('script'); s.src = src; if (sri) { s.integrity = sri; s.crossOrigin = 'anonymous'; } s.onload = res; s.onerror = function(){ rej(new Error('could not load ' + src)); }; document.head.appendChild(s); }); }
+function listenJs(){ if (!listenP) listenP = loadScript(BASE + '/listen.js').catch(function(e){ listenP = null; throw e; }); return listenP; }
+function getJSON(u){ var c = window.AbortController ? new AbortController() : null, t = c ? setTimeout(function(){ c.abort(); }, 9000) : 0; return fetch(u, { cache: 'no-store', signal: c ? c.signal : undefined }).then(function(r){ clearTimeout(t); return r.json(); }, function(e){ clearTimeout(t); throw e; }); }
+
+// ---- the station: one tiny manifest, read every 15 s (rehearsal: the unlisted room, every 5 s)
+function pick(st){ var s = Array.isArray(st.sources) ? st.sources : []; var f = function(fn){ return s.filter(function(x){ return x && fn(x.type) && safeUrl(x.url); })[0]; }; return { video: f(function(t){ return t === 'hls' || t === 'webrtc'; }), audio: f(function(t){ return t === 'audio'; }), iframe: f(function(t){ return t === 'iframe'; }) }; }
+function decide(st){ return Promise.resolve(st.on_air === true ? true : st.on_air === false ? false : !!st.live); }
+function sessOf(st){ return (st.rt && st.rt.started_at) || st.session || null; }
+function canPlay(st){ var p = pick(st); return !!(p.video || p.audio || p.iframe || st.webrtc); }
+function setLabel(){
+  var reh = CH === 'rehearsal';
+  play.classList.toggle('stop', playing);
+  if (playing) { txt(play, mode === 'rtc' && !rtpc ? '… connecting · tap to stop' : '■ Stop'); return; }
+  if (!S) { txt(play, 'Tuning…'); return; }
+  var p = pick(S);
+  txt(play, LIVE ? (canPlay(S) ? (reh ? '▶ Listen to the sound check' : (p.video && !S.webrtc ? '▶ Watch & listen' : '▶ Listen live')) : 'On air · the stream is on its way') : (reh ? 'Waiting for the sound check' : 'Off air · this door wakes up by itself'));
+}
+function render(st, live){
+  S = st; LIVE = live;
+  var reh = CH === 'rehearsal', p = pick(st), t = str(st.title, 140) || 'LIVE PIT';
+  document.title = (live ? (reh ? '🎚️ ' : '🔴 ') : '') + t + ' · Open Source Orchestra';
+  txt($('title'), t); txt($('subtitle'), str(st.subtitle, 240));
+  txt($('np'), st.now_playing ? '♫ ' + str(st.now_playing, 200) : '');
+  var v = str(st.venue, 160), s2 = live && st.started_at ? since(st.started_at) : '';
+  txt($('meta'), (v ? '📍 ' + v : '') + (v && s2 ? ' · ' : '') + s2);
+  var msg = st.rt && st.rt.message ? str(st.rt.message, 300) : '';
+  txt($('rtmsg'), msg ? '💬 ' + msg : ''); $('rtmsg').hidden = !msg;
+  badge.className = 'badge ' + (live ? (reh ? 'reh' : 'on') : (reh ? 'wait' : 'off'));
+  txt(bt, reh ? (live ? 'REHEARSAL · unlisted' : 'REHEARSAL · waiting') : (live ? 'ON AIR' : 'OFF AIR'));
+  root.classList.toggle('is-live', !!live && !reh);
+  $('offcard').hidden = !!live || reh; $('rehcard').hidden = !reh;
+  play.disabled = !(live && canPlay(st));
+  setLabel();
+  var r = p.audio || p.video || p.iframe, raw = $('raw');
+  if (r) { raw.href = safeUrl(r.url); raw.hidden = false; } else raw.hidden = true;
+  lists(st);
+  if (wasLive !== null && wasLive !== live) { say(live ? (reh ? 'The sound check is running.' : 'The PIT is on air now.') : 'Off air now. This door wakes up by itself.'); if (live && arcOn()) $('nudge').hidden = false; }
+  if (!live) $('nudge').hidden = true;
+  wasLive = live; note();
+}
+function sig(k, v){ var s; try { s = JSON.stringify(v == null ? null : v); } catch(e){ s = String(Date.now()); } if (sigs[k] === s) return false; sigs[k] = s; return true; }
+function fill(ul, arr, max){ var items = []; (Array.isArray(arr) ? arr : []).slice(0, max).forEach(function(l){ if (!l || typeof l !== 'object') return; var u = safeUrl(l.url); if (!u) return; items.push(h('li', null, [h('a', { href: u, rel: 'noopener', target: '_blank' }, [str(l.name, 120) || u])])); }); if (!items.length && ul.id === 'links') return 0; ul.textContent = ''; items.forEach(function(i){ ul.appendChild(i); }); return items.length; }
+var KIND = [[/onda|penny|donat|tip|give|patron|support|fund/i, '💛'], [/subcult|archive|record|storage|library|vault/i, '🗄️'], [/profile|artist|collection/i, '🎤'], [/mirror|radio|stream/i, '📻']];
+function renderSupport(arr){
+  var box = $('support'), n = 0; box.textContent = '';
+  (Array.isArray(arr) ? arr : []).slice(0, 12).forEach(function(x){
+    if (!x || typeof x !== 'object') return;
+    var nm = str(x.name, 100); if (!nm) return;
+    var u = safeUrl(x.url), kind = str(x.kind, 40), note = str(x.note, 280), ic = '✨';
+    KIND.some(function(k){ if (k[0].test(kind + ' ' + nm)) { ic = k[1]; return true; } return false; });
+    box.appendChild(h('li', { cls: 'sup' }, [h('h3', null, [h('span', { 'aria-hidden': 'true' }, [ic + ' ']), u ? h('a', { href: u, rel: 'noopener', target: '_blank' }, [nm]) : nm]), kind ? h('p', { cls: 'kind' }, [kind]) : null, note ? h('p', null, [note]) : null]));
+    n++;
+  });
+  $('supportCard').hidden = !n;
+}
+function lists(st){
+  if (sig('l', st.links)) fill($('links'), st.links, 24);
+  if (sig('m', st.mirrors)) $('mirrorsCard').hidden = !fill($('mirrors'), st.mirrors, 24);
+  if (sig('s', st.support)) renderSupport(st.support);
+  if (sig('w', st.whep)) { var w = safeUrl(st.whep); $('whepRow').hidden = !w; txt($('whep'), w); }
+}
+function online(ok){
+  if (ok) { root.classList.remove('is-offline'); txt($('checked'), 'checked ' + new Date().toLocaleTimeString() + ' · every ' + (CH === 'rehearsal' ? '5' : '15') + ' s'); return; }
+  txt(bt, 'OFFLINE?'); badge.className = 'badge warn'; root.classList.add('is-offline');
+  txt($('checked'), 'can’t reach the station right now · trying again');
+}
+function after(st, live){
+  render(st, live);
+  if (!live && playing) { stop(); say('The stream went off air. Thank you for listening.'); return; }
+  var s = sessOf(st);
+  if (playing && rtpc && ((curSess && s && s !== curSess) || /failed|closed/.test(rtpc.connectionState))) { stop(); start(); }
+  curSess = s;
+}
+function tick(){
+  if (inflight) return; inflight = true;
+  var done = function(){ inflight = false; };
+  if (CH === 'rehearsal') {
+    getJSON(BASE + '/api/rt/status?channel=rehearsal').then(function(q){ var on = !!q.on_air; after({ title: 'LIVE PIT · rehearsal', subtitle: 'unlisted sound check · not on the doors · anyone with this link can listen', now_playing: q.label || '', venue: q.by ? ('transmitter: ' + q.by) : '', webrtc: on, session: q.session, started_at: q.started_at, links: [], mirrors: [], sources: [] }, on); online(true); }).catch(function(){ online(false); }).then(done);
+    return;
+  }
+  getJSON(BASE + '/live.json').then(function(st){ if (!st || typeof st !== 'object') throw new Error('bad manifest'); return decide(st).then(function(l){ after(st, l); online(true); }); }).catch(function(){ online(false); }).then(done);
+}
+
+// ---- playing the live floor: WebRTC first, then HLS (Safari native, else hls.js), then a plain audio stream, then an iframe
+function start(){
+  if (!S) return;
+  ensureCtx(); arcPause(); $('nudge').hidden = true;
+  var p = pick(S), g = ++gen;
+  playing = true; lastLane = 'live';
+  if (S.webrtc) {
+    mode = 'rtc'; audio.volume = VOL; setLabel(); txt($('vizNote'), 'connecting to the floor…');
+    (window.pitListenRT ? Promise.resolve() : listenJs()).then(function(){ return window.pitListenRT(audio, CH); }).then(function(c){
+      if (g !== gen) { try { c.close(); } catch(e){} return; }
+      rtpc = c; curSess = sessOf(S); setLabel(); media(S.now_playing || S.title, CH === 'rehearsal' ? 'rehearsal · LIVE PIT' : 'LIVE PIT');
+      say(CH === 'rehearsal' ? 'Listening to the sound check.' : 'Listening live.');
+      c.addEventListener('connectionstatechange', function(){ if (g === gen && /failed|closed/.test(c.connectionState)) setTimeout(tick, 400); });
+      setTimeout(function(){ if (g === gen && audio.paused && audio.srcObject) $('unmute').hidden = false; }, 2500);
+    }).catch(function(e){
+      if (g !== gen) return;
+      if (p.audio) { playUrl(p.audio); return; }
+      playing = false; mode = ''; setLabel(); say('Could not connect: ' + str(e && e.message, 120));
+      txt($('vizNote'), 'could not connect · ' + str(e && e.message, 90));
+    });
+    return;
+  }
+  if (p.video && p.video.type === 'hls') {
+    mode = 'hls'; video.classList.add('has'); video.volume = VOL; setLabel(); media(S.now_playing || S.title, 'LIVE PIT');
+    var u = safeUrl(p.video.url);
+    if (video.canPlayType('application/vnd.apple.mpegurl')) { video.src = u; video.play().catch(function(){}); vizNone('watching the video · the mandala rests'); }
+    else loadScript(HLSJS, HLSSRI).then(function(){
+      if (g !== gen) return;
+      if (!window.Hls || !window.Hls.isSupported()) throw new Error('no MSE');
+      hls = new window.Hls({ lowLatencyMode: true, liveSyncDurationCount: 3 });
+      hls.loadSource(u); hls.attachMedia(video);
+      hls.on(window.Hls.Events.MANIFEST_PARSED, function(){ video.play().catch(function(){}); });
+      hls.on(window.Hls.Events.ERROR, function(ev, d){ if (!d || !d.fatal || g !== gen) return; stop(); if (p.audio) playUrl(p.audio); else say('The video stream failed.'); });
+      vizElement(video, 'video');
+    }).catch(function(){ if (g !== gen) return; if (p.audio) { video.classList.remove('has'); playUrl(p.audio); } else { stop(); say('This browser cannot play the video stream.'); } });
+    return;
+  }
+  if (p.audio) { playUrl(p.audio); return; }
+  playing = false; mode = ''; setLabel();
+  if (p.iframe) window.open(safeUrl(p.iframe.url), '_blank', 'noopener');
+}
+function playUrl(a){
+  var u = safeUrl(a && a.url), g = gen;
+  if (!u) { playing = false; mode = ''; setLabel(); return; }
+  u += (u.indexOf('?') < 0 ? '?' : '&') + 't=' + Date.now();
+  playing = true; mode = 'url'; lastLane = 'live'; setLabel(); media(S && (S.now_playing || S.title), 'LIVE PIT');
+  var go = function(cors){
+    var e = new Audio(); e.preload = 'auto'; e.volume = VOL; if (cors) e.crossOrigin = 'anonymous';
+    e.addEventListener('error', function(){ if (g !== gen || urlEl !== e) return; urlEl = null; dropEl(e); if (cors) go(false); else { stop(); say('This stream could not be played.'); txt($('vizNote'), 'the stream could not be played'); } });
+    e.addEventListener('playing', function(){ if (g !== gen || urlEl !== e) return; $('unmute').hidden = true; if (cors) vizElement(e, 'stream'); else vizNone('this stream does not let the visualiser listen · the sound still plays'); });
+    urlEl = e; e.src = u;
+    var pr = e.play(); if (pr && pr.catch) pr.catch(function(err){ if (g === gen && urlEl === e && err && err.name === 'NotAllowedError') $('unmute').hidden = false; });
+  };
+  go(!!ensureCtx());
+}
+function stop(){
+  gen++; playing = false; mode = '';
+  if (rtpc) { try { rtpc.close(); } catch(e){} rtpc = null; }
+  try { audio.pause(); } catch(e){} audio.srcObject = null; audio.removeAttribute('src');
+  if (hls) { try { hls.destroy(); } catch(e){} hls = null; }
+  try { video.pause(); } catch(e){} video.removeAttribute('src'); video.classList.remove('has'); try { video.load(); } catch(e){}
+  if (urlEl) { var e = urlEl; urlEl = null; try { e.pause(); } catch(x){} e.removeAttribute('src'); try { e.load(); } catch(x){} dropEl(e); }
+  $('unmute').hidden = true; vizOff(); setLabel();
+}
+audio.addEventListener('playing', function(){ if (mode === 'rtc' && audio.srcObject) { $('unmute').hidden = true; vizStream(audio.srcObject); } });
+play.addEventListener('click', function(){ if (playing) { stop(); say('Stopped.'); } else start(); });
+$('unmute').addEventListener('click', function(){ ensureCtx(); var e = mode === 'url' ? urlEl : (mode === 'hls' ? video : audio); if (e) e.play().then(function(){ $('unmute').hidden = true; }, function(){}); });
+$('toLive').addEventListener('click', function(){ arcPause(); $('nudge').hidden = true; if (!playing && !play.disabled) start(); play.focus(); });
+
+// ---- the ʻohana radio (opt-in, never autoplays). Correct titles: the first file is "Butterflies and Love" (the Songbook plays it under that name).
+var TR = [
+  { e: '🦋', t: 'Butterflies and Love', a: 'Shaka Lei Kaumaka', n: 'demo recorded with Ethereum Singapore, for Aya Miyaguchi & the Ethereum family · G–Em–C–D', u: RA + 'i-open-sourced-my-whole-universe.mp3', m: 'https://shakaleikaumaka.com/songbook/butterflies-and-love/', ml: 'words & chords in the Songbook' },
+  { e: '🌍', t: 'A Planet We Share As One', a: 'Shaka Lei Kaumaka', n: 'recorded with Ethereum Singapore · C–G–D–D', u: RA + 'a-planet-we-share-as-one.mp3', m: 'https://shakaleikaumaka.com/songbook/a-planet-we-share-as-one/', ml: 'words & chords in the Songbook' },
+  { e: '🤝', t: 'Be My Friend', a: 'Matteo Tambussi', n: 'Turin · co-founder of the Open Source Orchestra tradition', u: RA + 'matteo-tambussi--be-my-friend.mp3', m: 'https://opensourceorchestra.org/nodes/matteo-tambussi/', ml: 'Matteo’s story' },
+  { e: '🏝️', t: 'Island', a: 'Matteo Tambussi', n: 'Turin · co-founder of the Open Source Orchestra tradition', u: RA + 'matteo-tambussi--island.mp3', m: 'https://opensourceorchestra.org/nodes/matteo-tambussi/', ml: 'Matteo’s story' }
+];
+var ai = 0, arcErr = 0, seeking = false;
+function arcOn(){ return !!arc.getAttribute('src') && !arc.paused && !arc.ended; }
+function arcShow(){
+  var t = TR[ai], on = arcOn();
+  txt($('arcEm'), t.e); txt($('arcT'), t.t); txt($('arcA'), t.a + ' · ' + t.n);
+  var m = $('arcMore'); m.textContent = ''; m.appendChild(h('a', { href: t.m }, [t.ml + ' →']));
+  var b = $('arcPlay'); txt(b, on ? '⏸' : '▶'); b.setAttribute('aria-label', on ? 'Pause the ʻohana radio' : 'Play the ʻohana radio');
+  $('arcNow').classList.toggle('spin', on);
+  var bs = $('tracks').querySelectorAll('button'); for (var i = 0; i < bs.length; i++) bs[i].setAttribute('aria-current', i === ai ? 'true' : 'false');
+}
+function arcList(){ var ol = $('tracks'); TR.forEach(function(t, i){ var b = h('button', { type: 'button' }, [h('span', { 'aria-hidden': 'true' }, [t.e]), h('span', null, [t.t]), h('small', null, [t.a])]); b.addEventListener('click', function(){ arcPlay(i); }); ol.appendChild(h('li', null, [b])); }); }
+function arcPlay(i){
+  ensureCtx(); if (playing) stop(); $('nudge').hidden = true; lastLane = 'arc';
+  if (typeof i === 'number') { var n = (i + TR.length) % TR.length; if (n !== ai || !arc.getAttribute('src')) { ai = n; arc.src = TR[ai].u; } }
+  else if (!arc.getAttribute('src')) arc.src = TR[ai].u;
+  arc.volume = VOL; var pr = arc.play(); if (pr && pr.catch) pr.catch(function(){});
+  arcShow();
+}
+function arcPause(){ if (!arc.paused) arc.pause(); }
+arc.addEventListener('playing', function(){ arcErr = 0; vizElement(arc, 'archive'); arcShow(); media(TR[ai].t, TR[ai].a); });
+arc.addEventListener('pause', function(){ arcShow(); if (!playing) vizOff(); });
+arc.addEventListener('ended', function(){ arcPlay(ai + 1); });
+arc.addEventListener('error', function(){ if (!arc.getAttribute('src')) return; if (++arcErr < TR.length) arcPlay(ai + 1); else { arcShow(); say('The ʻohana radio could not be reached.'); } });
+arc.addEventListener('timeupdate', function(){ if (seeking) return; var d = arc.duration; txt($('arcCur'), mmss(arc.currentTime)); txt($('arcDur'), mmss(d)); $('arcSeek').value = d ? Math.round(arc.currentTime / d * 1000) : 0; });
+$('arcSeek').addEventListener('input', function(){ seeking = true; if (arc.duration) txt($('arcCur'), mmss(this.value / 1000 * arc.duration)); });
+$('arcSeek').addEventListener('change', function(){ seeking = false; if (arc.duration) arc.currentTime = this.value / 1000 * arc.duration; });
+$('arcPlay').addEventListener('click', function(){ if (arcOn()) arcPause(); else arcPlay(); });
+$('arcPrev').addEventListener('click', function(){ arcPlay(ai - 1); });
+$('arcNext').addEventListener('click', function(){ arcPlay(ai + 1); });
+$('meanwhile').addEventListener('click', function(){ arcPlay(); $('arcPlay').focus({ preventScroll: true }); $('radio').scrollIntoView({ behavior: CALM ? 'auto' : 'smooth', block: 'start' }); });
+
+// ---- the mandala + level meter + garden: drawn ONLY from the real sound (Web Audio AnalyserNode). Silence draws stillness.
+var AC = window.AudioContext || window.webkitAudioContext, ctx = null, an = null, fd = null, td = null, src = null, srcEl = false, routed = [], vizOn = false, vizKind = '';
+function ensureCtx(){
+  if (!AC) return null;
+  if (!ctx) { try { ctx = new AC(); an = ctx.createAnalyser(); an.fftSize = 2048; an.smoothingTimeConstant = 0.8; fd = new Uint8Array(an.frequencyBinCount); td = new Float32Array(an.fftSize); } catch(e){ ctx = null; return null; } }
+  if (ctx.state !== 'running') { try { ctx.resume().catch(function(){}); } catch(e){} }
+  return ctx;
+}
+function unhook(){ if (!src) return; try { src.disconnect(an); } catch(e){} if (!srcEl) { try { src.disconnect(); } catch(e){} } src = null; }
+function vizStream(ms){ if (!ensureCtx() || !ms || !ms.getAudioTracks || !ms.getAudioTracks().length) return vizNone('the visualiser cannot open this stream'); unhook(); try { src = ctx.createMediaStreamSource(ms); srcEl = false; src.connect(an); vizStart('webrtc'); } catch(e){ vizNone('the visualiser cannot open this stream'); } }
+function vizElement(e, kind){
+  if (!ensureCtx()) return vizNone('');
+  var r = null; routed.forEach(function(x){ if (x.e === e) r = x; });
+  if (!r) { try { r = { e: e, n: ctx.createMediaElementSource(e) }; r.n.connect(ctx.destination); routed.push(r); } catch(x){ return vizNone(''); } }
+  unhook(); try { r.n.connect(an); src = r.n; srcEl = true; vizStart(kind); } catch(x){}
+}
+function dropEl(e){ routed = routed.filter(function(x){ if (x.e !== e) return true; try { x.n.disconnect(); } catch(y){} if (src === x.n) src = null; return false; }); }
+function vizStart(k){ vizOn = true; vizKind = k; quietSince = 0; note(); kick(); }
+function vizNone(why){ vizOn = false; vizKind = ''; unhook(); txt($('vizNote'), why || ''); kick(); }
+function vizOff(){ vizOn = false; vizKind = ''; unhook(); note(); kick(); }
+function soundOn(){ return (playing && !!mode) || arcOn(); }
+var quietSince = 0;
+function note(){
+  if (vizOn && soundOn()) { txt($('vizNote'), quietSince && performance.now() - quietSince > 1500 ? 'quiet on the line · the mandala rests until there is sound' : (CALM ? 'motion paused · the level meter still reads the real sound' : 'drawn live from the sound you hear')); return; }
+  if (playing && mode === 'rtc' && !rtpc) return;
+  txt($('vizNote'), LIVE && !playing ? 'press play · the mandala dances only to real sound' : 'the mandala waits for sound');
+}
+var vz = $('viz'), vx = vz.getContext('2d'), gd = $('garden'), gx = gd.getContext('2d'), DPR = 1;
+var NB = 12, edges = null, band = new Float32Array(NB), prevB = new Float32Array(NB), db = -Infinity, pk = -90, fh = [], lastBeat = 0, frames = 0, beats = 0, rot = 0;
+function analyse(now){
+  if (!edges) { edges = []; var ny = ctx.sampleRate / 2, n = an.frequencyBinCount; for (var i = 0; i <= NB; i++) edges.push(Math.max(1, Math.min(n - 1, Math.round(50 * Math.pow(14000 / 50, i / NB) / ny * n)))); }
+  an.getByteFrequencyData(fd);
+  var flux = 0;
+  for (var b = 0; b < NB; b++) { var s = 0, c = 0, hi = Math.max(edges[b + 1], edges[b] + 1); for (var k = edges[b]; k < hi; k++) { s += fd[k]; c++; } band[b] = c ? Math.pow(s / c / 255, 1.25) : 0; var d = band[b] - prevB[b]; if (d > 0) flux += d; prevB[b] = band[b]; }
+  if (an.getFloatTimeDomainData) an.getFloatTimeDomainData(td); else { var u8 = new Uint8Array(an.fftSize); an.getByteTimeDomainData(u8); for (var j = 0; j < u8.length; j++) td[j] = (u8[j] - 128) / 128; }
+  var sum = 0, peak = 0; for (var q = 0; q < td.length; q++) { var x = td[q]; sum += x * x; if (x < 0) x = -x; if (x > peak) peak = x; }
+  var rms = Math.sqrt(sum / td.length); db = rms > 1e-7 ? 20 * Math.log10(rms) : -Infinity;
+  pk = Math.max(peak > 1e-7 ? 20 * Math.log10(peak) : -90, pk - 0.4);
+  fh.push(flux); if (fh.length > 40) fh.shift();
+  var avg = 0; for (var z = 0; z < fh.length; z++) avg += fh[z]; avg /= fh.length;
+  if (flux > avg * 1.8 + 0.06 && now - lastBeat > 260 && db > -55) { lastBeat = now; beats++; if (!CALM) spawn(); }
+  if (db < -65) { if (!quietSince) quietSince = now; } else quietSince = 0;
+  rot += isFinite(db) ? Math.max(0, (db + 60) / 60) * 0.006 : 0;
+  frames++;
+}
+function drawMandala(active){
+  var w = vz.width, hh = vz.height, R = Math.min(w, hh) / 2 * 0.95, L = active && isFinite(db) ? Math.max(0, Math.min(1, (db + 60) / 54)) : 0, g = vx, i, b, v;
+  g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, w, hh); g.translate(w / 2, hh / 2);
+  var halo = g.createRadialGradient(0, 0, R * 0.08, 0, 0, R);
+  halo.addColorStop(0, 'rgba(246,218,160,' + (0.1 + L * 0.28).toFixed(3) + ')'); halo.addColorStop(1, 'rgba(246,218,160,0)');
+  g.fillStyle = halo; g.beginPath(); g.arc(0, 0, R, 0, 6.2832); g.fill();
+  g.lineWidth = Math.max(1, R * 0.007); g.strokeStyle = 'rgba(247,238,220,' + (0.3 + L * 0.35).toFixed(3) + ')';
+  [0.985, 0.9, 0.57, 0.31].forEach(function(f){ g.beginPath(); g.arc(0, 0, R * f, 0, 6.2832); g.stroke(); });
+  g.rotate(rot);
+  if (active) { g.shadowColor = 'rgba(246,218,160,.7)'; g.shadowBlur = 6 + 22 * L; }
+  for (i = 0; i < 12; i++) { // lotus: 12 petals, mirror-symmetric like the projected mandala
+    var u = i <= 6 ? i : 12 - i; v = active ? (band[Math.min(NB - 1, u * 2)] + band[Math.min(NB - 1, u * 2 + 1)]) / 2 : 0;
+    var r0 = R * 0.31, r1 = R * (0.47 + 0.42 * v), wd = R * (0.1 + 0.03 * v);
+    g.save(); g.rotate(i * 0.5236 - 1.5708);
+    var gr = g.createLinearGradient(r0, 0, r1, 0); gr.addColorStop(0, 'rgba(246,218,160,' + (0.22 + 0.5 * v).toFixed(3) + ')'); gr.addColorStop(1, 'rgba(255,179,230,' + (0.08 + 0.55 * v).toFixed(3) + ')');
+    g.fillStyle = gr; g.strokeStyle = 'rgba(255,246,230,' + (0.45 + 0.5 * v).toFixed(3) + ')';
+    g.beginPath(); g.moveTo(r0, 0); g.quadraticCurveTo((r0 + r1) / 2, wd, r1, 0); g.quadraticCurveTo((r0 + r1) / 2, -wd, r0, 0); g.fill(); g.stroke();
+    g.restore();
+  }
+  for (i = 0; i < 48; i++) { // lace: 48 beads, the treble
+    b = i % 12; b = b <= 6 ? b : 12 - b; v = active ? band[Math.min(NB - 1, 5 + b)] : 0;
+    var a = i * 0.1309, rr = R * (0.66 + 0.24 * v), dr = R * (0.011 + 0.026 * v);
+    g.fillStyle = i % 2 ? 'rgba(159,240,255,' + (0.3 + 0.6 * v).toFixed(3) + ')' : 'rgba(247,238,220,' + (0.35 + 0.6 * v).toFixed(3) + ')';
+    g.beginPath(); g.arc(Math.cos(a) * rr, Math.sin(a) * rr, dr, 0, 6.2832); g.fill();
+  }
+  g.shadowBlur = 0;
+  var bass = active ? band[0] * 0.6 + band[1] * 0.4 : 0, dh = R * (0.2 + 0.07 * bass), dw = R * 0.12; // the diamond at the heart
+  g.rotate(-rot); g.lineWidth = Math.max(1.2, R * 0.012); g.strokeStyle = active ? 'rgba(246,218,160,.95)' : 'rgba(246,218,160,.55)';
+  g.fillStyle = 'rgba(109,27,53,' + (0.35 + 0.4 * L).toFixed(3) + ')';
+  g.beginPath(); g.moveTo(0, -dh); g.lineTo(dw, 0); g.lineTo(0, dh); g.lineTo(-dw, 0); g.closePath(); g.fill(); g.stroke();
+  g.beginPath(); g.moveTo(-dw, 0); g.lineTo(0, dh * 0.22); g.lineTo(dw, 0); g.moveTo(0, -dh); g.lineTo(0, dh * 0.22); g.stroke();
+}
+// the garden on the floor: every real beat sends a butterfly to pollinate a flower
+var PAL = ['#ffb3e6', '#f6daa0', '#9ff0ff', '#ff8fa3', '#f7eedc', '#c9a7ff'], flowers = [], flies = [], bloomed = 0, flew = 0;
+function seed(){
+  var W = gd.width, n = Math.max(8, Math.min(34, Math.round(W / (DPR * 46)))), old = flowers, r = 7;
+  flowers = [];
+  for (var i = 0; i < n; i++) { r = (r * 9301 + 49297) % 233280; var j = r / 233280; flowers.push({ x: (i + 0.5 + (j - 0.5) * 0.7) / n, h: 0.32 + j * 0.42, b: old[i] ? old[i].b : 0, c: PAL[i % PAL.length], s: 0.8 + j * 0.5 }); }
+}
+function spawn(){
+  if (flies.length > 13 || !flowers.length) return;
+  var best = null; flowers.forEach(function(f){ if (!best || f.b + Math.random() * 0.3 < best.b) best = f; });
+  flies.push({ x0: 0.35 + Math.random() * 0.3, f: best, t: 0, d: 1.3 + Math.random() * 0.9, c: PAL[Math.floor(Math.random() * PAL.length)], ph: Math.random() * 6 });
+  flew++;
+}
+function stepGarden(dt){
+  flies = flies.filter(function(b){ b.t += dt / b.d; if (b.t < 1) return true; var was = b.f.b; b.f.b = Math.min(1, b.f.b + 0.34); if (was < 1 && b.f.b >= 1) bloomed++; return false; });
+  txt($('gcount'), flew ? '🦋 ' + flew + ' butterfl' + (flew === 1 ? 'y' : 'ies') + ' · 🌸 ' + bloomed + ' flower' + (bloomed === 1 ? '' : 's') + ' in bloom — grown only by the sound you heard' : '');
+}
+function drawGarden(){
+  var W = gd.width, H = gd.height, g = gx, d = DPR;
+  g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, W, H);
+  var gr = g.createLinearGradient(0, H * 0.55, 0, H); gr.addColorStop(0, 'rgba(60,24,40,0)'); gr.addColorStop(1, 'rgba(60,24,40,.85)'); g.fillStyle = gr; g.fillRect(0, H * 0.55, W, H * 0.45);
+  flowers.forEach(function(f){
+    var x = f.x * W, top = H - H * f.h * (0.55 + 0.45 * f.b) - 14 * d;
+    g.strokeStyle = 'rgba(143,191,143,.75)'; g.lineWidth = 1.6 * d; g.beginPath(); g.moveTo(x, H); g.quadraticCurveTo(x + 6 * d, (H + top) / 2, x, top); g.stroke();
+    if (f.b <= 0) { g.fillStyle = 'rgba(143,191,143,.9)'; g.beginPath(); g.ellipse(x, top, 2.6 * d, 4.2 * d, 0, 0, 6.2832); g.fill(); return; }
+    var pr = (3 + 7 * f.b) * f.s * d; g.fillStyle = f.c; g.globalAlpha = 0.55 + 0.4 * f.b;
+    for (var p = 0; p < 5; p++) { var a = p * 1.2566 + f.x * 9; g.beginPath(); g.ellipse(x + Math.cos(a) * pr * 0.75, top + Math.sin(a) * pr * 0.75, pr * 0.62, pr * 0.38, a, 0, 6.2832); g.fill(); }
+    g.globalAlpha = 1; g.fillStyle = '#f0b429'; g.beginPath(); g.arc(x, top, pr * 0.3, 0, 6.2832); g.fill();
+  });
+  flies.forEach(function(b){
+    var t = b.t, e = t * t * (3 - 2 * t), tx = b.f.x * W, ty = H - H * b.f.h * (0.55 + 0.45 * b.f.b) - 22 * d;
+    var x = b.x0 * W + (tx - b.x0 * W) * e + Math.sin(t * 9 + b.ph) * 14 * d, y = -6 * d + (ty + 6 * d) * e + Math.cos(t * 7 + b.ph) * 5 * d;
+    var fl = Math.abs(Math.sin(t * 34 + b.ph)), s = 6 * d;
+    g.fillStyle = b.c; g.globalAlpha = 0.95;
+    g.beginPath(); g.ellipse(x - s * 0.55 * fl, y - s * 0.2, s * 0.6 * fl + 0.6, s * 0.75, -0.4, 0, 6.2832); g.ellipse(x + s * 0.55 * fl, y - s * 0.2, s * 0.6 * fl + 0.6, s * 0.75, 0.4, 0, 6.2832); g.fill();
+    g.globalAlpha = 1; g.fillStyle = '#2b1b2e'; g.fillRect(x - 0.8 * d, y - s * 0.7, 1.6 * d, s * 1.2);
+  });
+}
+var vuNext = 0;
+function vu(active, now){
+  var x = active && isFinite(db) ? Math.max(0, Math.min(1, (db + 60) / 60)) : 0, y = active ? Math.max(0, Math.min(1, (pk + 60) / 60)) : 0;
+  $('vuFill').style.setProperty('--l', x.toFixed(3)); $('vuPeak').style.left = (y * 100).toFixed(1) + '%';
+  if (now >= vuNext || !active) { vuNext = now + 250; txt($('vuNum'), active ? (isFinite(db) && db > -90 ? String(Math.round(db)).replace('-', '−') + ' dB' : 'silence') : '— dB'); note(); }
+  window.__pitViz = { frames: frames, db: isFinite(db) ? Math.round(db * 10) / 10 : null, peak: Math.round(pk), beats: beats, butterflies: flew, bloomed: bloomed, kind: vizKind, on: !!active };
+}
+var raf = 0, lastT = 0, calmT = 0;
+function kick(){ if (CALM) { calmLoop(); return; } if (!raf && !document.hidden) raf = requestAnimationFrame(loop); }
+function loop(now){
+  raf = 0; var dt = lastT ? Math.min(0.05, (now - lastT) / 1000) : 0.016; lastT = now;
+  var active = !!(vizOn && an && soundOn());
+  if (active) analyse(now);
+  drawMandala(active); stepGarden(dt); drawGarden(); vu(active, now);
+  if ((active || flies.length) && !CALM && !document.hidden) raf = requestAnimationFrame(loop); else lastT = 0;
+}
+function calmLoop(){ // reduced motion: no animation at all; the numbers still tell the truth once a second
+  var active = !!(vizOn && an && soundOn());
+  if (active) analyse(performance.now());
+  vu(active, performance.now());
+  if (active && !calmT) calmT = setInterval(calmLoop, 1000);
+  if (!active && calmT) { clearInterval(calmT); calmT = 0; }
+}
+function rest(){ drawMandala(false); drawGarden(); vu(false, performance.now()); }
+function fit(){
+  DPR = Math.min(2, window.devicePixelRatio || 1);
+  [vz, gd].forEach(function(c){ var r = c.getBoundingClientRect(), w = Math.max(1, Math.round(r.width * DPR)), hh = Math.max(1, Math.round(r.height * DPR)); if (c.width !== w || c.height !== hh) { c.width = w; c.height = hh; } });
+  seed(); drawMandala(false); drawGarden();
+}
+
+// ---- motion, volume, share, media keys
+var CALM = false;
+function setCalm(on, save){ CALM = !!on; root.classList.toggle('calm', CALM); $('calm').setAttribute('aria-pressed', CALM ? 'true' : 'false'); if (save) store.set('pitlive_calm', CALM ? '1' : '0'); if (CALM && raf) { cancelAnimationFrame(raf); raf = 0; } if (!CALM && calmT) { clearInterval(calmT); calmT = 0; } flies = []; rest(); kick(); }
+$('calm').addEventListener('click', function(){ setCalm(!CALM, true); });
+var VOL = parseFloat(store.get('pitlive_vol')); if (!(VOL >= 0 && VOL <= 1)) VOL = 1;
+$('vol').value = VOL;
+$('vol').addEventListener('input', function(){ VOL = +this.value; [audio, video, arc, urlEl].forEach(function(e){ if (e) e.volume = VOL; }); store.set('pitlive_vol', String(VOL)); });
+$('share').addEventListener('click', function(){ var b = this, d = { title: 'LIVE PIT · Open Source Orchestra', text: 'Tune in: live from the OSO PIT at Zu Chiang Mai', url: location.origin + '/' }; if (navigator.share) navigator.share(d).catch(function(){}); else if (navigator.clipboard) navigator.clipboard.writeText(d.url).then(function(){ txt(b, 'Link copied'); say('Link copied.'); }, function(){}); });
+$('copyEmbed').addEventListener('click', function(){ var b = this; if (navigator.clipboard) navigator.clipboard.writeText($('embed').textContent).then(function(){ txt(b, 'Copied ✓'); say('Embed line copied.'); }, function(){ txt(b, 'Select & copy'); }); });
+$('lj').href = BASE + '/live.json';
+function media(title, artist){ if (!('mediaSession' in navigator) || !window.MediaMetadata) return; try { navigator.mediaSession.metadata = new window.MediaMetadata({ title: str(title, 120) || 'LIVE PIT', artist: artist || 'Open Source Orchestra', album: 'LIVE PIT · ʻohana radio', artwork: [{ src: PH + 'dc8-874-800.webp', sizes: '800x533', type: 'image/webp' }] }); } catch(e){} }
+if ('mediaSession' in navigator) [['play', function(){ if (lastLane === 'live' && LIVE && !playing) start(); else arcPlay(); }], ['pause', function(){ if (playing) stop(); else arcPause(); }], ['stop', function(){ if (playing) stop(); arcPause(); }], ['nexttrack', function(){ arcPlay(ai + 1); }], ['previoustrack', function(){ arcPlay(ai - 1); }]].forEach(function(a){ try { navigator.mediaSession.setActionHandler(a[0], a[1]); } catch(e){} });
+
+// ---- go
+arcList(); arcShow();
+var mq = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+fit(); setCalm((mq && mq.matches) || store.get('pitlive_calm') === '1', false);
+var rz = 0; window.addEventListener('resize', function(){ clearTimeout(rz); rz = setTimeout(function(){ fit(); kick(); }, 150); });
+tick(); setInterval(tick, CH === 'rehearsal' ? 5000 : 15000);
+document.addEventListener('visibilitychange', function(){ if (!document.hidden) { tick(); kick(); } });
+})();
+</script>
+</body></html>

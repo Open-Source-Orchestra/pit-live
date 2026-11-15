@@ -117,7 +117,7 @@ var $=function(i){return document.getElementById(i)};
 var BASE='';
 var Q=new URLSearchParams(location.search);
 var FORCE_RELAY=Q.get('relay')==='1';
-var tok='',who='',legacy=false,stream=null,pc=null,sessionId=null,curCh='rehearsal',ctx=null,raf=null,rec=null,wake=null,statTimer=null,pollTimer=null,connTimer=null,lastBytes=0,lastT=0,reconnects=0,fails=0,relayNow=false,wantOnAir=false,signed=false,quietSince=0,useTone=false,lastErr='',iceInfo='—';
+var setStart=null,setCh='rehearsal',tok='',who='',legacy=false,stream=null,pc=null,sessionId=null,curCh='rehearsal',ctx=null,raf=null,rec=null,wake=null,statTimer=null,pollTimer=null,connTimer=null,lastBytes=0,lastT=0,reconnects=0,fails=0,relayNow=false,wantOnAir=false,signed=false,quietSince=0,useTone=false,lastErr='',iceInfo='—';
 function say(id,t,cls){var e=$(id);e.textContent=t||'';e.className='msg'+(cls?' '+cls:'')}
 function sleep(ms){return new Promise(function(r){setTimeout(r,ms)})}
 function waitIce(p,ms){return new Promise(function(r){if(p.iceGatheringState==='complete')return r();p.onicegatheringstatechange=function(){if(p.iceGatheringState==='complete')r()};setTimeout(r,ms||2000)})}
@@ -215,7 +215,7 @@ async function publish(){
     var rr=await fetch(BASE+'/api/rt/publish',{method:'POST',headers:H(),body:JSON.stringify({sdp:pc.localDescription.sdp,channel:ch,label:$('label').value,message:$('message').value})});
     var txt=await rr.text();var res;try{res=JSON.parse(txt)}catch(e){throw new Error('server '+rr.status+': '+txt.slice(0,140))}
     if(!res.ok){if(rr.status===401){signed=false;showSignin(true);say('m1','✗ '+hint(tok),'bad');throw new Error('key not accepted: sign in again (step 1)')}throw new Error(res.error||'publish failed')}
-    sessionId=res.sessionId;await pc.setRemoteDescription(res.answer);
+    sessionId=res.sessionId;await pc.setRemoteDescription(res.answer);if(!setStart||setCh!==ch){setStart=new Date();setCh=ch}
     pc.onconnectionstatechange=onState;
     setState('CONNECTING…','warn');showOnAir(true);$('since').textContent='since '+new Date().toLocaleTimeString();
     if(connTimer)clearTimeout(connTimer);connTimer=setTimeout(function(){if(pc&&wantOnAir&&!connected()){fails++;say('m4','⚠ no link after 12 s'+(relayNow?'':': switching to the relay (works on strict venue wifi)')+'…','warn');relayNow=true;scheduleReconnect()}},12000);
@@ -234,7 +234,20 @@ function scheduleReconnect(){if(!wantOnAir)return;teardownPc();reconnects++;
   var d=Math.min(15000,1500*reconnects);say('m4','⚠ reconnecting in '+Math.round(d/1000)+' s (try '+reconnects+'/8)…','warn');setTimeout(function(){if(wantOnAir&&!pc)publish()},d)}
 async function stopServer(ch,sid){try{await fetch(BASE+'/api/rt/stop',{method:'POST',headers:H(),body:JSON.stringify({sessionId:sid,channel:ch})})}catch(e){}}
 async function stop(){var ch=curCh,sid=sessionId;wantOnAir=false;stopRec();teardownPc();if(pollTimer)clearInterval(pollTimer);pollTimer=null;releaseWake();
-  await stopServer(ch,sid);sessionId=null;setState('OFF AIR','warn');showOnAir(false);say('m3',(ch==='rehearsal'?'rehearsal ended':'off air')+' · closed cleanly','ok')}
+  await stopServer(ch,sid);sessionId=null;setState('OFF AIR','warn');showOnAir(false);say('m3',(ch==='rehearsal'?'rehearsal ended':'off air')+' · closed cleanly','ok');
+  if(ch==='live'&&setStart&&!useTone)dropCard(setStart,new Date());setStart=null}
+function dropCard(a,b){var d=document.createElement('details');d.open=true;d.style.marginTop='12px';var sm=document.createElement('summary');sm.textContent='📝 Subcult drop card: the story that travels with this recording';d.appendChild(sm);
+  var t=function(x){return x.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})};
+  var txt=['LIVE PIT set · '+($('label').value||'OSO PIT'),
+   'when: '+a.toDateString()+' · '+t(a)+'–'+t(b)+' ('+Intl.DateTimeFormat().resolvedOptions().timeZone+')',
+   'where: '+($('message').value||'the OSO PIT · 4Seas · Zu Chiang Mai'),
+   'who: '+($('label').value||'—')+' · transmitted by '+(who||'—'),
+   'context: recorded live from the OSO PIT main mixer board, carried by LIVE PIT (live.zuchiangmai.app), the floor, not the stage',
+   'consent: [ ] everyone audible said yes · names: ____________ (no yes from everyone = this file stays private)',
+   'license: performers keep the rights to their performance · our words CC BY-SA 4.0 · Built on LIVE PIT by Open Source Orchestra',
+   'support the artist: Onda, every play sends a wave (getonda.org) · tip: artist.opensourceorchestra.org/tip/?artist=shaka',
+   'home: the SHAKA OHANA collection on Subcult (subcult.fm) → then add the link to the PIT memory'].join('\n');
+  var pre=document.createElement('pre');pre.textContent=txt;d.appendChild(pre);var c=document.createElement('button');c.className='mid';c.type='button';c.textContent='copy the drop card';c.onclick=function(){if(navigator.clipboard)navigator.clipboard.writeText(txt);c.textContent='✓ copied: upload the recording + this card to Subcult once everyone said yes'};d.appendChild(c);$('m3').appendChild(d)}
 $('go').onclick=function(){if($('go').disabled)return;curCh=chosen();wantOnAir=true;reconnects=0;fails=0;relayNow=false;publish()};
 $('stop').onclick=stop;
 $('golive').onclick=async function(){if(!pc)return;var sid=sessionId;teardownPc();await stopServer('rehearsal',sid);sessionId=null;

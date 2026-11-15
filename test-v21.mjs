@@ -104,6 +104,23 @@ ok('E stop → everything off', live.webrtc === false && st.on_air === false && 
   await pr.click('#stop'); await pr.waitForTimeout(1200); await pr.close();
 }
 
+// H · real-mic on-air set → STOP writes the Subcult drop card (local only: it lights the doors)
+if (DO_LIVE && process.env.PIT_DROP !== '0') {
+  const ph = await ctx.newPage(); watch(ph, 'drop');
+  await ph.goto(base + '/broadcast', { waitUntil: 'domcontentloaded' });
+  await ph.waitForSelector('#signedin:not(.hid)', { timeout: 10000 }).catch(() => {});
+  await ph.click('#test');
+  await ph.waitForFunction(() => !document.getElementById('go').disabled, null, { timeout: 15000 });
+  await ph.check('input[name=ch][value=live]');
+  await ph.fill('#label', 'e2e trio · fake mic'); await ph.fill('#message', 'test venue');
+  await ph.click('#go');
+  await ph.waitForFunction(() => document.getElementById('state').textContent === 'ON AIR', null, { timeout: 20000 }).catch(() => {});
+  await ph.waitForTimeout(2500); await ph.click('#stop'); await ph.waitForTimeout(1500);
+  const card = await ph.evaluate(() => { const d = [...document.querySelectorAll('#m3 details')].find(x => /Subcult drop card/.test(x.textContent)); return d ? d.querySelector('pre').textContent : ''; });
+  ok('H drop card written after an on-air set', /e2e trio/.test(card) && /consent: \[ \]/.test(card) && /Onda/.test(card) && card.split('\n').length >= 8, JSON.stringify(card.split('\n')[0] || ''));
+  await ph.close();
+}
+
 // G · revoke (local only)
 if (DO_REVOKE && ADMIN) {
   const nm = (await j('/api/rt/whoami', { headers: { authorization: 'Bearer ' + TX } })).name;
