@@ -48,7 +48,7 @@ button{cursor:pointer;touch-action:manipulation}
 .top nav{display:flex;gap:2px}
 .top nav a{padding:8px 10px;border-radius:999px;color:#e9dfe6;text-decoration:none;font-size:14px}
 .top nav a:hover{background:rgba(229,193,123,.12);color:#fff}
-.pill{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:38px;padding:7px 14px;border:1px solid var(--line);border-radius:999px;background:rgba(15,10,21,.78);color:var(--ivory);text-decoration:none;font-size:14px;line-height:1.2}
+.pill{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:38px;padding:7px 14px;border:1px solid var(--line);border-radius:999px;background:rgba(15,10,21,.78);color:var(--ivory);text-decoration:none;font-size:14px;line-height:1.2;white-space:nowrap}
 .pill:hover{border-color:var(--gold);color:#fff;background:rgba(229,193,123,.1)}
 .pill[aria-pressed=true]{background:var(--gold);color:#1a0e14;border-color:var(--gold)}
 /* the stage */
@@ -67,10 +67,12 @@ html.is-live .stage{background:radial-gradient(90% 70% at 50% 34%,#561330 0%,#1f
 .curtain.l{left:0;border-right:2px solid rgba(229,193,123,.42)}
 .curtain.r{right:0;border-left:2px solid rgba(229,193,123,.42)}
 .valance{position:absolute;left:0;right:0;top:0;height:14px;z-index:-1;background:linear-gradient(180deg,#6d1b35,#3d0c1c);border-bottom:2px solid rgba(229,193,123,.45)}
-.inner{position:relative;width:min(760px,100%);display:flex;flex-direction:column;align-items:center;text-align:center;animation:up .9s ease-out both}
+.inner{position:relative;width:min(760px,100%);display:grid;grid-template-areas:"kick" "badge" "art" "info";justify-items:center;text-align:center;animation:up .9s ease-out both}
 @keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-.kicker{margin:4px 0 0;color:var(--gold);font:650 11px/1.3 var(--sans);letter-spacing:.2em;text-transform:uppercase}
-.badge{display:inline-flex;align-items:center;gap:10px;margin:10px 0 0;padding:9px 20px;border-radius:10px;border:2px solid #3a2f40;background:#150f19;color:#c9bccb;font:800 15px/1 var(--sans);letter-spacing:.22em;text-transform:uppercase;box-shadow:inset 0 0 12px rgba(0,0,0,.6);transition:all .5s}
+.kicker{grid-area:kick;margin:4px 0 0;color:var(--gold);font:650 11px/1.3 var(--sans);letter-spacing:.2em;text-transform:uppercase}
+.art{grid-area:art;display:flex;flex-direction:column;align-items:center}
+.info{grid-area:info;display:flex;flex-direction:column;align-items:center;width:100%}
+.badge{grid-area:badge;display:inline-flex;align-items:center;gap:10px;margin:10px 0 0;padding:9px 20px;border-radius:10px;border:2px solid #3a2f40;background:#150f19;color:#c9bccb;font:800 15px/1 var(--sans);letter-spacing:.22em;text-transform:uppercase;box-shadow:inset 0 0 12px rgba(0,0,0,.6);transition:all .5s}
 .badge .dot{width:11px;height:11px;border-radius:50%;background:#5b5160}
 .badge.on{border-color:#ff6a82;background:#7d0d22;color:#fff1f3;box-shadow:0 0 26px rgba(255,59,92,.6),inset 0 0 14px rgba(255,255,255,.12)}
 .badge.on .dot,.badge.reh .dot{background:#fff;animation:pulse 1.6s infinite}
@@ -79,9 +81,11 @@ html.is-live .stage{background:radial-gradient(90% 70% at 50% 34%,#561330 0%,#1f
 .badge.wait{border-color:#6b5320;background:#21190a;color:#ecd39c}
 .badge.warn{border-color:#8a6d2d;color:#f3dfae}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,255,255,.75)}70%{box-shadow:0 0 0 12px rgba(255,255,255,0)}100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}}
-.mandala{position:relative;width:min(430px,72vw,44vh);aspect-ratio:1;margin:30px 0 2px}
+.mandala{position:relative;width:min(400px,72vw,42vh);aspect-ratio:1;margin:58px 0 2px}
 .mandala::before{content:"";position:absolute;inset:-8% -10% -3%;border:2px solid rgba(246,218,160,.5);border-bottom:0;border-radius:50% 50% 0 0/42% 42% 0 0;box-shadow:inset 0 12px 44px rgba(246,218,160,.08),0 -2px 30px rgba(246,218,160,.12)}
-.mandala::after{content:"✺";position:absolute;left:50%;top:-14%;transform:translateX(-50%);color:var(--gold2);font-size:24px;line-height:1;text-shadow:0 0 12px rgba(246,218,160,.65)}
+.mandala::after{content:"✺";position:absolute;left:50%;top:calc(-8% - 13px);transform:translateX(-50%);color:var(--gold2);font-size:24px;line-height:1;text-shadow:0 0 12px rgba(246,218,160,.65)}
+html.is-live .mandala::before{border-color:rgba(255,106,130,.7);box-shadow:inset 0 12px 44px rgba(255,59,92,.12),0 -2px 34px rgba(255,59,92,.25)}
+html.is-reh .mandala::before{border-color:rgba(240,180,41,.7)}
 #viz{display:block;width:100%;height:100%}
 .viznote{min-height:1.4em;margin:6px 0 0;color:#d6c9d0;font:italic 14px/1.4 var(--serif)}
 h1{margin:4px 0 0;font:400 clamp(30px,5.4vw,54px)/1.08 var(--serif);letter-spacing:-.01em;text-shadow:0 2px 24px rgba(0,0,0,.8)}
@@ -111,6 +115,8 @@ button.big[disabled]{background:#2a2130;color:#cfc3d1;box-shadow:none;cursor:def
 .warm.reh{border-color:rgba(240,180,41,.6)}
 .warm.nudge{border-color:rgba(255,59,92,.7)}
 .checked{margin:10px 0 0;color:#bcaebb;font-size:12.5px}
+.arcstage{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 10px;margin:14px 0 0;padding:8px 10px 8px 16px;border:1px solid var(--line);border-radius:999px;background:rgba(15,10,21,.84);font-size:14.5px}
+.arcstage b{font:400 16px var(--serif)}
 video{display:none;width:min(720px,100%);margin:14px 0 0;border:2px solid rgba(246,218,160,.45);border-radius:12px;background:#000}
 video.has{display:block}
 .floor{position:relative;width:calc(100% + 32px);height:clamp(84px,13vh,124px);margin:22px -16px 0;flex:none;margin-top:auto}
@@ -125,24 +131,25 @@ video.has{display:block}
 .duo{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:18px;align-items:start}
 .card{padding:18px 20px;border:1px solid var(--line);border-radius:18px;background:var(--panel)}
 .card h2{font-size:clamp(24px,2.6vw,30px)}
-.now{display:flex;align-items:center;gap:14px}
+.now{display:flex;align-items:center;gap:14px;margin-top:6px}
 .disc{flex:none;display:grid;place-items:center;width:66px;height:66px;border-radius:50%;border:1px solid var(--line);font-size:28px;background:radial-gradient(circle,#2a1f3a 0 22%,#120b18 23% 60%,#3a2a20 61% 64%,#120b18 65%)}
 .spin .disc{animation:spin 7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .trk{min-width:0}
 .trk b{display:block;font:400 21px/1.2 var(--serif)}
-.trk span{color:#d6c9d0;font-size:14px}
-.arcbtns{display:flex;align-items:center;gap:10px;margin:14px 0 8px}
+.trk span{display:block;color:#efe5ea;font-size:14.5px}
+.trk small{display:block;margin-top:2px;color:#cdbfcc;font-size:13px}
+.arcbtns{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:14px 0 8px}
 .round{display:grid;place-items:center;width:44px;height:44px;border:1px solid var(--gold);border-radius:50%;background:#1c1333;color:var(--gold2);font-size:16px}
 .round.main{width:56px;height:56px;background:var(--gold);color:#1a0e14;font-size:20px}
-.seek{display:flex;flex:1;align-items:center;gap:10px;min-width:0;color:#d6c9d0;font:12px var(--mono)}
+.seek{display:flex;flex:1 1 220px;align-items:center;gap:10px;min-width:0;color:#d6c9d0;font:12px var(--mono)}
 .seek input{flex:1;min-width:60px;accent-color:var(--gold)}
 .tracks{list-style:none;margin:10px 0 0;padding:0}
 .tracks li{border-top:1px solid rgba(229,193,123,.14)}
 .tracks button{display:flex;align-items:baseline;gap:10px;width:100%;padding:11px 8px;border:0;border-radius:10px;background:none;color:#ece2e6;text-align:left}
 .tracks button:hover{background:rgba(255,255,255,.05)}
 .tracks button[aria-current=true]{background:rgba(229,193,123,.12);color:#fff}
-.tracks small{margin-left:auto;color:#cbbec9;font-size:12.5px;text-align:right}
+.tracks small{display:block;color:#cbbec9;font-size:12.5px}
 .more{margin:10px 0 0;font-size:14px;color:#d9ccd3}
 .sup-list{display:grid;gap:10px;margin:12px 0 0;padding:0;list-style:none}
 .sup{padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:rgba(229,193,123,.05)}
@@ -161,12 +168,14 @@ video.has{display:block}
 .strip{display:grid;grid-auto-flow:column;grid-auto-columns:min(78%,290px);gap:12px;margin:0;padding:4px 2px 14px;overflow-x:auto;scroll-snap-type:x mandatory;list-style:none}
 .strip:focus-visible{outline-offset:-2px}
 .strip figure{margin:0;overflow:hidden;scroll-snap-align:start;border:1px solid var(--line);border-radius:14px;background:#120b18}
-.strip img{display:block;width:100%;aspect-ratio:3/2;object-fit:cover;background:#1c1322}
+.strip img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;background:#1c1322}
 .strip figcaption{padding:8px 11px;color:#e6dbe1;font-size:13.5px}
 .doors{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0;padding:0;list-style:none}
 .doors a{display:inline-flex;align-items:center;min-height:38px;padding:6px 14px;border:1px solid var(--line);border-radius:999px;color:var(--ivory);text-decoration:none;font-size:14px}
 .doors a:hover{border-color:var(--gold);background:rgba(229,193,123,.1)}
 code{font:13px/1.5 var(--mono)}
+.card h3{margin:0 0 4px;font:400 21px/1.3 var(--serif)}
+.swipe{display:none;margin:0 0 8px;color:#cdbfcc;font-size:13px}
 .embed{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:8px 0}
 .embed code{flex:1 1 300px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#07050b;color:var(--gold2);overflow-wrap:anywhere}
 .card p{margin:8px 0 0}
@@ -176,26 +185,39 @@ code{font:13px/1.5 var(--mono)}
 .foot code{color:var(--gold2);overflow-wrap:anywhere}
 /* calm: the motion button, or the system's reduced-motion wish */
 .calm .wall img,.calm .flut span,.calm .flut i,.calm .badge .dot,.calm .inner,.calm .disc{animation:none!important}
-.calm .flut span{opacity:.42;bottom:auto;top:var(--t)}
-@media (prefers-reduced-motion:reduce){.wall img,.flut span,.flut i,.badge .dot,.inner,.disc{animation:none!important}.flut span{opacity:.42;bottom:auto;top:var(--t)}*{transition:none!important;scroll-behavior:auto!important}}
+.calm .flut span{opacity:.3;bottom:auto;top:var(--t)}
+@media (prefers-reduced-motion:reduce){.wall img,.flut span,.flut i,.badge .dot,.inner,.disc{animation:none!important}.flut span{opacity:.3;bottom:auto;top:var(--t)}*{transition:none!important;scroll-behavior:auto!important}}
+@media (min-width:1100px){
+.inner{width:min(1160px,calc(100% - 15vw));grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto auto 1fr;grid-template-areas:"art kick" "art badge" "art info";column-gap:clamp(32px,4vw,72px);justify-items:start;align-items:start;text-align:left;margin:clamp(8px,3vh,40px) 0 0}
+.kicker{margin-top:clamp(8px,4vh,48px)}
+.art{justify-self:center;align-self:center}
+.mandala{width:min(470px,34vw,58vh);margin-top:64px}
+.info{align-items:flex-start}
+.ctl,.row2{justify-content:flex-start}
+.arcstage{justify-content:flex-start}
+}
 @media (max-width:760px){.top nav{display:none}}
 @media (max-width:560px){
 .top{gap:6px;padding:8px 10px}.brand span{display:none}.pill{min-height:36px;padding:6px 10px;font-size:13px}
-.stage{min-height:auto;padding:12px 12px 0}.mandala{width:min(300px,74vw);margin-top:26px}
+.tvw{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+.stage{min-height:auto;padding:12px 12px 0}.mandala{width:min(280px,72vw);margin-top:52px}
+.kicker{letter-spacing:.12em;font-size:10.5px}
 .badge{padding:8px 15px;font-size:13px;letter-spacing:.18em}
 button.big{width:100%;padding:15px 18px;font-size:18px}
-.wall img:nth-child(n+7){display:none}.floor{width:calc(100% + 24px);margin:22px -12px 0}
-.vol input{width:96px}.card{padding:16px}.trk b{font-size:19px}
+.wall img:nth-child(n+7),.flut span:nth-child(even){display:none}.floor{width:calc(100% + 24px);margin:22px -12px 0}
+.arcstage{border-radius:18px}.vol input{width:96px}.card{padding:16px}.trk b{font-size:19px}.disc{width:54px;height:54px;font-size:24px}
+.cards{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:86%;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:10px}
+.lc{scroll-snap-align:start}.swipe{display:block}
 }
 </style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the player</a>
 <header class="top">
-  <a class="brand" href="/">🕳️ <b>LIVE PIT</b> <span>ʻohana radio</span></a>
+  <a class="brand" href="/">📻 <b>LIVE PIT</b> <span>ʻohana radio</span></a>
   <nav aria-label="On this page"><a href="#radio">ʻOhana radio</a><a href="#learn">Learn</a><a href="#wall">Living wall</a><a href="#carry">Carry it</a></nav>
   <button id="calm" class="pill" type="button" aria-pressed="false">✦ Pause motion</button>
-  <a class="pill" href="https://osodaomeet.opensourceorchestra.org/?slide=origin-repertoire&amp;hall=mumbai&amp;channel=devcon-6">📺 Theater</a>
+  <a class="pill" href="https://osodaomeet.opensourceorchestra.org/?slide=origin-repertoire&amp;hall=mumbai&amp;channel=devcon-6">📺 <span class="tvw">Theater</span></a>
 </header>
 
 <main id="main">
@@ -220,8 +242,11 @@ button.big{width:100%;padding:15px 18px;font-size:18px}
   <div class="inner">
     <p class="kicker">Open Source Orchestra · the PIT · live radio</p>
     <div id="badge" class="badge"><span class="dot" aria-hidden="true"></span><span id="badgeText">TUNING…</span></div>
-    <div class="mandala" aria-hidden="true"><canvas id="viz"></canvas></div>
-    <p class="viznote" id="vizNote">the mandala waits for sound</p>
+    <div class="art">
+      <div class="mandala" aria-hidden="true"><canvas id="viz"></canvas></div>
+      <p class="viznote" id="vizNote">the mandala waits for sound</p>
+    </div>
+    <div class="info">
     <h1 id="title">LIVE PIT</h1>
     <p class="sub" id="subtitle">from the OSO PIT main mixer board · 4Seas · Zu Chiang Mai</p>
     <p class="np" id="np"></p>
@@ -230,7 +255,9 @@ button.big{width:100%;padding:15px 18px;font-size:18px}
     <div class="ctl">
       <button class="big" id="play" type="button" disabled>Tuning…</button>
       <button class="pill" id="unmute" type="button" hidden>🔈 Tap to hear it</button>
+      <button class="pill" id="meanwhile" type="button" hidden>🌺 Meanwhile, play the ʻohana radio</button>
     </div>
+    <p class="arcstage" id="arcStage" hidden><span><span aria-hidden="true">🌺</span> ʻohana radio · <b id="arcStageT"></b></span><button class="pill" id="arcStageBtn" type="button">⏸ Pause</button></p>
     <div class="row2">
       <label class="vol" for="vol"><span aria-hidden="true">🔊</span> Volume <input id="vol" type="range" min="0" max="1" step="0.01" value="1"></label>
       <button class="pill" id="share" type="button">Share this door</button>
@@ -243,7 +270,6 @@ button.big{width:100%;padding:15px 18px;font-size:18px}
     <div class="warm" id="offcard" hidden>
       <strong>This door wakes up by itself.</strong>
       <p>When the OSO PIT mixer board goes live, this page lights up on its own — it checks every 15 seconds. Nothing plays until you press play.</p>
-      <button class="pill" id="meanwhile" type="button">🌺 Meanwhile, play the ʻohana radio</button>
     </div>
     <div class="warm reh" id="rehcard" hidden>
       <strong>🎚️ Sound check · unlisted</strong>
@@ -254,6 +280,8 @@ button.big{width:100%;padding:15px 18px;font-size:18px}
       <button class="pill" id="toLive" type="button">Switch to the live floor</button>
     </div>
     <p class="checked" id="checked">tuning in…</p>
+    <noscript><p class="warm">The live player needs JavaScript to listen to the floor. The ʻohana radio songs below play without it, and <a href="/live.json">live.json</a> says whether the PIT is on air.</p></noscript>
+    </div>
   </div>
   <div class="floor" aria-hidden="true"><canvas id="garden"></canvas><p class="gcount" id="gcount"></p></div>
   <p class="sr-only" id="sr" aria-live="polite"></p>
@@ -264,7 +292,7 @@ button.big{width:100%;padding:15px 18px;font-size:18px}
   <section class="card" id="radio" aria-labelledby="h-radio">
     <h2 id="h-radio">🌺 The ʻohana radio</h2>
     <p class="lede">Human-made songs the ʻohana jukebox already plays on our doors, streamed from shakaleikaumaka.com. Nothing starts until you press play.</p>
-    <div class="now" id="arcNow"><div class="disc" aria-hidden="true" id="arcEm">🦋</div><div class="trk"><b id="arcT">Butterflies and Love</b><span id="arcA">Shaka Lei Kaumaka</span></div></div>
+    <div class="now" id="arcNow"><div class="disc" aria-hidden="true" id="arcEm">🦋</div><div class="trk"><b id="arcT">Butterflies and Love</b><span id="arcA">Shaka Lei Kaumaka</span><small id="arcN"></small></div></div>
     <div class="arcbtns">
       <button class="round" id="arcPrev" type="button" aria-label="Previous song">⏮</button>
       <button class="round main" id="arcPlay" type="button" aria-label="Play the ʻohana radio">▶</button>
@@ -290,7 +318,8 @@ button.big{width:100%;padding:15px 18px;font-size:18px}
 <section class="blk" id="learn" aria-labelledby="h-learn">
   <h2 id="h-learn">🦋 Learn while you listen</h2>
   <p class="epi">“let’s build the most epic radio player for the world to learn about ethereum, the ohana music and how to save the planet we share as one with butterflies and love pollinating the infinite garden”<small>— Shaka, 15 November 2026, asking for this door</small></p>
-  <ul class="cards">
+  <p class="swipe" aria-hidden="true">swipe the cards →</p>
+  <ul class="cards" tabindex="0" aria-label="Fourteen learn cards">
     <li class="lc"><span class="tag">⟠ Ethereum</span><h3>A world computer nobody owns</h3><p>Ethereum is a decentralized blockchain network and software platform. Since 2015 it has grown into a home for apps that run 24/7 for anyone with an internet connection — and no single person or company runs it.</p><p class="src">Source: <a href="https://ethereum.org/what-is-ethereum/">ethereum.org · What is Ethereum?</a></p></li>
     <li class="lc"><span class="tag">⟠ Ethereum · 🌍 our planet</span><h3>Light on the planet</h3><p>Since the Merge in September 2022, Ethereum runs on proof-of-stake. ethereum.org quotes the CCRI estimate: the Merge cut Ethereum’s yearly electricity use by more than 99.988%.</p><p class="src">Source: <a href="https://ethereum.org/energy-consumption/">ethereum.org · energy consumption</a></p></li>
     <li class="lc"><span class="tag">⟠ Ethereum · 🎻 music</span><h3>Tips straight to the artist</h3><p>Fork the First Artist (built at ETHGlobal Mumbai, November 2026) lets a fan’s own wallet send USDC or ETH to an artist’s ENS name: 96.31% to the artist, 3.69% to their AI steward’s compute, 0% to the Open Source Orchestra. Nobody holds anyone’s money — and a sent transfer is final.</p><p class="src">More: <a href="https://artist.opensourceorchestra.org/">artist.opensourceorchestra.org</a></p></li>
@@ -359,6 +388,7 @@ button.big{width:100%;padding:15px 18px;font-size:18px}
 <footer class="foot">
   <div class="wrap">
     <p class="lic"><strong>Code: AGPL-3.0-or-later · Words &amp; design: CC BY-SA 4.0 · Built by Open Source Orchestra — Shaka Lei Kaumaka &amp; the AI ʻohana. Forks keep this credit and stay open.</strong></p>
+    <p class="lic">Source: <a href="https://github.com/Open-Source-Orchestra/pit-live">github.com/Open-Source-Orchestra/pit-live</a> (AGPL-3.0, with the attribution term in NOTICE) · <a href="https://github.com/Open-Source-Orchestra/pit-live/blob/main/PROTOCOL.md">operating protocol</a></p>
     <p>📸 Official Devcon 8 photos by the Devcon team's photographers. The full set is here: <a href="https://drive.google.com/drive/folders/1kz5QWi7YEwIo3SkEplFNXq3AmeEAVVxr">Devcon 8 photos (Google Drive)</a>.</p>
     <p>See yourself and want it down? Tell us at <a href="mailto:aloha@myagentohana.com?subject=LIVE%20PIT%20takedown">aloha@myagentohana.com</a> and it comes down. No questions asked; see also our <a href="https://opensourceorchestra.org/takedown/">takedown page</a>.</p>
     <p>Music, lyrics and quotes stay © their authors (the ʻohana radio plays consented tracks); photographs keep their original permissions and are not relicensed. Licences: <a href="https://www.gnu.org/licenses/agpl-3.0.html">AGPL-3.0</a> · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. This page is its own source — view it, save it, fork it.</p>
@@ -404,7 +434,7 @@ function sessOf(st){ return (st.rt && st.rt.started_at) || st.session || null; }
 function canPlay(st){ var p = pick(st); return !!(p.video || p.audio || p.iframe || st.webrtc); }
 function setLabel(){
   var reh = CH === 'rehearsal';
-  play.classList.toggle('stop', playing);
+  play.classList.toggle('stop', playing); stageArc();
   if (playing) { txt(play, mode === 'rtc' && !rtpc ? '… connecting · tap to stop' : '■ Stop'); return; }
   if (!S) { txt(play, 'Tuning…'); return; }
   var p = pick(S);
@@ -422,7 +452,7 @@ function render(st, live){
   txt($('rtmsg'), msg ? '💬 ' + msg : ''); $('rtmsg').hidden = !msg;
   badge.className = 'badge ' + (live ? (reh ? 'reh' : 'on') : (reh ? 'wait' : 'off'));
   txt(bt, reh ? (live ? 'REHEARSAL · unlisted' : 'REHEARSAL · waiting') : (live ? 'ON AIR' : 'OFF AIR'));
-  root.classList.toggle('is-live', !!live && !reh);
+  root.classList.toggle('is-live', !!live && !reh); root.classList.toggle('is-reh', !!live && reh);
   $('offcard').hidden = !!live || reh; $('rehcard').hidden = !reh;
   play.disabled = !(live && canPlay(st));
   setLabel();
@@ -556,13 +586,17 @@ var ai = 0, arcErr = 0, seeking = false;
 function arcOn(){ return !!arc.getAttribute('src') && !arc.paused && !arc.ended; }
 function arcShow(){
   var t = TR[ai], on = arcOn();
-  txt($('arcEm'), t.e); txt($('arcT'), t.t); txt($('arcA'), t.a + ' · ' + t.n);
+  txt($('arcEm'), t.e); txt($('arcT'), t.t); txt($('arcA'), t.a); txt($('arcN'), t.n);
   var m = $('arcMore'); m.textContent = ''; m.appendChild(h('a', { href: t.m }, [t.ml + ' →']));
   var b = $('arcPlay'); txt(b, on ? '⏸' : '▶'); b.setAttribute('aria-label', on ? 'Pause the ʻohana radio' : 'Play the ʻohana radio');
   $('arcNow').classList.toggle('spin', on);
   var bs = $('tracks').querySelectorAll('button'); for (var i = 0; i < bs.length; i++) bs[i].setAttribute('aria-current', i === ai ? 'true' : 'false');
+  txt($('arcStageT'), t.t + ' — ' + t.a); txt($('arcStageBtn'), on ? '⏸ Pause' : '▶ Play');
+  stageArc();
 }
-function arcList(){ var ol = $('tracks'); TR.forEach(function(t, i){ var b = h('button', { type: 'button' }, [h('span', { 'aria-hidden': 'true' }, [t.e]), h('span', null, [t.t]), h('small', null, [t.a])]); b.addEventListener('click', function(){ arcPlay(i); }); ol.appendChild(h('li', null, [b])); }); }
+// on the stage: off air → "Meanwhile…"; once a song is chosen → its name + pause/play (hidden while the live floor plays)
+function stageArc(){ var has = !!arc.getAttribute('src'); $('arcStage').hidden = !has || playing; $('meanwhile').hidden = LIVE || CH === 'rehearsal' || has || !S; }
+function arcList(){ var ol = $('tracks'); TR.forEach(function(t, i){ var b = h('button', { type: 'button' }, [h('span', { 'aria-hidden': 'true' }, [t.e]), h('span', null, [t.t, h('small', null, [t.a])])]); b.addEventListener('click', function(){ arcPlay(i); }); ol.appendChild(h('li', null, [b])); }); }
 function arcPlay(i){
   ensureCtx(); if (playing) stop(); $('nudge').hidden = true; lastLane = 'arc';
   if (typeof i === 'number') { var n = (i + TR.length) % TR.length; if (n !== ai || !arc.getAttribute('src')) { ai = n; arc.src = TR[ai].u; } }
@@ -581,7 +615,8 @@ $('arcSeek').addEventListener('change', function(){ seeking = false; if (arc.dur
 $('arcPlay').addEventListener('click', function(){ if (arcOn()) arcPause(); else arcPlay(); });
 $('arcPrev').addEventListener('click', function(){ arcPlay(ai - 1); });
 $('arcNext').addEventListener('click', function(){ arcPlay(ai + 1); });
-$('meanwhile').addEventListener('click', function(){ arcPlay(); $('arcPlay').focus({ preventScroll: true }); $('radio').scrollIntoView({ behavior: CALM ? 'auto' : 'smooth', block: 'start' }); });
+$('meanwhile').addEventListener('click', function(){ arcPlay(); $('arcStageBtn').focus(); });
+$('arcStageBtn').addEventListener('click', function(){ if (arcOn()) arcPause(); else arcPlay(); });
 
 // ---- the mandala + level meter + garden: drawn ONLY from the real sound (Web Audio AnalyserNode). Silence draws stillness.
 var AC = window.AudioContext || window.webkitAudioContext, ctx = null, an = null, fd = null, td = null, src = null, srcEl = false, routed = [], vizOn = false, vizKind = '';
@@ -669,12 +704,12 @@ function seed(){
 }
 function spawn(){
   if (flies.length > 13 || !flowers.length) return;
-  var best = null; flowers.forEach(function(f){ if (!best || f.b + Math.random() * 0.3 < best.b) best = f; });
+  var best = null, bs = 9; flowers.forEach(function(f){ var sc = f.b + Math.random() * 0.6; if (sc < bs) { bs = sc; best = f; } });
   flies.push({ x0: 0.35 + Math.random() * 0.3, f: best, t: 0, d: 1.3 + Math.random() * 0.9, c: PAL[Math.floor(Math.random() * PAL.length)], ph: Math.random() * 6 });
   flew++;
 }
 function stepGarden(dt){
-  flies = flies.filter(function(b){ b.t += dt / b.d; if (b.t < 1) return true; var was = b.f.b; b.f.b = Math.min(1, b.f.b + 0.34); if (was < 1 && b.f.b >= 1) bloomed++; return false; });
+  flies = flies.filter(function(b){ b.t += dt / b.d; if (b.t < 1) return true; var was = b.f.b; b.f.b = Math.min(1, b.f.b + 0.5); if (was < 1 && b.f.b >= 1) bloomed++; return false; });
   txt($('gcount'), flew ? '🦋 ' + flew + ' butterfl' + (flew === 1 ? 'y' : 'ies') + ' · 🌸 ' + bloomed + ' flower' + (bloomed === 1 ? '' : 's') + ' in bloom — grown only by the sound you heard' : '');
 }
 function drawGarden(){
@@ -734,6 +769,7 @@ function setCalm(on, save){ CALM = !!on; root.classList.toggle('calm', CALM); $(
 $('calm').addEventListener('click', function(){ setCalm(!CALM, true); });
 var VOL = parseFloat(store.get('pitlive_vol')); if (!(VOL >= 0 && VOL <= 1)) VOL = 1;
 $('vol').value = VOL;
+try { var tv = new Audio(); tv.volume = 0.5; if (tv.volume !== 0.5) { $('vol').parentNode.hidden = true; VOL = 1; } } catch(e){} // iOS: volume belongs to the device buttons
 $('vol').addEventListener('input', function(){ VOL = +this.value; [audio, video, arc, urlEl].forEach(function(e){ if (e) e.volume = VOL; }); store.set('pitlive_vol', String(VOL)); });
 $('share').addEventListener('click', function(){ var b = this, d = { title: 'LIVE PIT · Open Source Orchestra', text: 'Tune in: live from the OSO PIT at Zu Chiang Mai', url: location.origin + '/' }; if (navigator.share) navigator.share(d).catch(function(){}); else if (navigator.clipboard) navigator.clipboard.writeText(d.url).then(function(){ txt(b, 'Link copied'); say('Link copied.'); }, function(){}); });
 $('copyEmbed').addEventListener('click', function(){ var b = this; if (navigator.clipboard) navigator.clipboard.writeText($('embed').textContent).then(function(){ txt(b, 'Copied ✓'); say('Embed line copied.'); }, function(){ txt(b, 'Select & copy'); }); });

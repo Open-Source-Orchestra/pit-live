@@ -9,6 +9,7 @@ for (const m of src.matchAll(/(?:export )?const (\w+) = `([\s\S]*?)`;/g)) {
   pages[m[1]] = m[2];
 }
 pages.BROADCAST_HTML = fs.readFileSync(dir + 'broadcast.html', 'utf8');
+pages.PLAYER_HTML = fs.readFileSync(dir + 'player.html', 'utf8');
 let bad = 0, n = 0;
 const check = (name, js) => { n++; try { new vm.Script(js, { filename: name }); } catch (e) { bad++; console.error('SYNTAX FAIL', name, e.message); } };
 for (const [name, body] of Object.entries(pages)) {

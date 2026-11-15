@@ -5,3 +5,4 @@ kv.json
 wrangler.jsonc
 *.log
 qa/player-shots/
+public/

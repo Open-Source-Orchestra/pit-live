@@ -1,4 +1,5 @@
 import { handleRealtime, realtimeInfo, isRtPath, BROADCAST_HTML, LISTEN_JS } from './realtime.js';
+import PLAYER_HTML from './player.html';
 // pit-live — the LIVE PIT transponder.
 // One tiny Worker + KV: /live.json (state), /widget.js (embed on any door), / (player), /broadcast (transmitter),
 // /admin (mixer desk), POST /api/state (set state), /api/keys (transmitter keys), WHIP /whip + WHEP /whep.
@@ -12,6 +13,7 @@ const DEFAULT_STATE = {
   now_playing: '',
   venue: 'Nomad Market I · 4Seas · Chiang Mai',
   sources: [],               // [{type:'hls'|'audio'|'webrtc'|'iframe', url, label}]
+  support: [],               // [{name,url,kind,note}] ways to support + where the recordings live (Onda, Subcult, tips, pool)
   mirrors: [],               // [{name,url}] friends carrying the same feed
   links: [
     { name: 'Open Source Orchestra', url: 'https://opensourceorchestra.org/' },
@@ -218,126 +220,7 @@ export default {
 };
 
 // ---------------------------------------------------------------- PLAYER
-const PLAYER_HTML = `<!doctype html>
-<html lang="en"><head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>LIVE PIT · Open Source Orchestra · live from Zu Chiang Mai</title>
-<meta name="description" content="Live radio from the Open Source Orchestra PIT — the floor, not the stage. Main mixer board feed from 4Seas, Zu Chiang Mai. Free, open, no login.">
-<meta property="og:title" content="LIVE PIT · Open Source Orchestra">
-<meta property="og:description" content="Tune in: live from the OSO PIT main mixer board at 4Seas, Zu Chiang Mai. The floor, not the stage.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://live.zuchiangmai.app/">
-<link rel="alternate" type="application/json" href="/live.json">
-<style>
-:root{--bg:#07060a;--fg:#f4efe6;--dim:#a79f93;--hot:#ff3b3b;--gold:#e8b84a;--card:#141019}
-*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-main{max-width:720px;margin:0 auto;padding:28px 18px 60px}
-h1{font-size:clamp(28px,7vw,48px);margin:8px 0 4px;letter-spacing:.5px}
-.sub{color:var(--dim);margin:0 0 22px}
-.badge{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:#1d1920;color:var(--dim);font-weight:600;letter-spacing:1px;font-size:13px}
-.badge .dot{width:10px;height:10px;border-radius:50%;background:#555}
-.badge.on{background:#2a0b0b;color:#ffd1d1}.badge.on .dot{background:var(--hot);box-shadow:0 0 0 0 rgba(255,59,59,.7);animation:pulse 1.6s infinite}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,59,59,.7)}70%{box-shadow:0 0 0 12px rgba(255,59,59,0)}100%{box-shadow:0 0 0 0 rgba(255,59,59,0)}}
-@media (prefers-reduced-motion:reduce){.badge.on .dot{animation:none}}
-.card{background:var(--card);border:1px solid #241e2b;border-radius:18px;padding:18px;margin:16px 0}
-button.big{width:100%;font:inherit;font-size:22px;font-weight:700;padding:18px;border-radius:14px;border:0;background:var(--gold);color:#1b1405;cursor:pointer}
-button.big[disabled]{opacity:.5;cursor:default}
-video,audio{width:100%;border-radius:12px;background:#000;margin-top:14px}
-video:not([src]):not(.has){display:none}
-.np{font-size:18px;margin-top:10px;color:var(--fg)}
-.meta{color:var(--dim);font-size:14px}
-ul{padding-left:18px}a{color:var(--gold)}
-.row{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
-.row a,.row button{font:inherit;font-size:14px;padding:8px 12px;border-radius:999px;border:1px solid #3a3242;background:transparent;color:var(--fg);text-decoration:none;cursor:pointer}
-.stat{font-variant-numeric:tabular-nums}
-footer{color:var(--dim);font-size:13px;margin-top:28px;border-top:1px solid #241e2b;padding-top:14px}
-.hidden{display:none!important}
-</style></head>
-<body><main>
-<div id="badge" class="badge"><span class="dot"></span><span id="badgeText">TUNING…</span></div>
-<h1 id="title">LIVE PIT</h1>
-<p class="sub" id="subtitle">from the OSO PIT main mixer board · 4Seas · Zu Chiang Mai</p>
-
-<div class="card">
-  <button class="big" id="play" disabled>▶ Tune in</button>
-  <video id="video" playsinline controls preload="none"></video>
-  <audio id="audio" controls preload="none" class="hidden"></audio>
-  <div class="np" id="np"></div>
-  <div class="meta" id="meta"></div>
-  <div class="row">
-    <button id="share" type="button">Share this door</button>
-    <a id="raw" href="#" target="_blank" rel="noopener" class="hidden">Open raw stream</a>
-    <a href="/live.json" target="_blank" rel="noopener">live.json</a>
-  </div>
-</div>
-
-<div class="card" id="offcard">
-  <strong>Off air right now.</strong>
-  <p class="meta">This door stays open. When the PIT mixer board goes live, this page wakes up by itself (it re-checks every 15 s). Nomad Market I · 4Seas · Chiang Mai · music from 18:10 local.</p>
-</div>
-
-<div class="card hidden" id="mirrorsCard"><strong>Also carried by friends</strong><ul id="mirrors"></ul></div>
-
-<div class="card"><strong>Doors</strong><ul id="links"></ul></div>
-
-<footer>
-<p>The Open Source Orchestra PIT is the floor, not the stage. Everything here is a public good — fork it, host it, carry the feed: <a href="https://opensourceorchestra.org/join/">opensourceorchestra.org/join/</a>. No login, no tracking, no cookies.</p>
-<p>Carry this on your own site with one line: <code>&lt;script src="https://live.zuchiangmai.app/widget.js" async&gt;&lt;/script&gt;</code></p>
-<p>Built on LIVE PIT by Open Source Orchestra: Shaka Lei Kaumaka &amp; the AI ʻohana · code <a href="https://github.com/Open-Source-Orchestra/pit-live">AGPL-3.0 source</a> · words CC BY-SA 4.0 · forks keep this credit and stay open.</p>
-</footer>
-</main>
-<script>
-(function(){
-  var S=null, hls=null, rtpc=null, playing=false, probeTimer=null, curSess=null;
-  var CH=/[?&]ch=rehearsal/.test(location.search)?'rehearsal':'live';
-  var $=function(id){return document.getElementById(id)};
-  var badge=$('badge'),bt=$('badgeText'),play=$('play'),video=$('video'),audio=$('audio');
-  function esc(s){return String(s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
-  function pick(st){var s=st.sources||[];var v=s.filter(function(x){return x.type==='hls'||x.type==='webrtc'})[0];var a=s.filter(function(x){return x.type==='audio'})[0];var f=s.filter(function(x){return x.type==='iframe'})[0];return {video:v,audio:a,iframe:f}}
-  function render(st,live){
-    S=st;document.title=(live?'🔴 ':'')+(st.title||'LIVE PIT')+' · Open Source Orchestra';
-    $('title').textContent=st.title||'LIVE PIT';$('subtitle').textContent=st.subtitle||'';
-    $('np').textContent=st.now_playing?('♫ '+st.now_playing):'';
-    $('meta').textContent=(st.venue||'')+(st.started_at&&live?(' · on air since '+new Date(st.started_at).toLocaleTimeString()):'');
-    badge.className='badge'+(live?' on':'');bt.textContent=live?'ON AIR':'OFF AIR';
-    $('offcard').classList.toggle('hidden',!!live);
-    var p=pick(st);var any=p.video||p.audio||p.iframe;
-    any=any||st.webrtc;play.disabled=!(live&&any);if(!playing)play.textContent=live?(p.video?'▶ Watch & listen':'▶ Listen'):'Off air';
-    var raw=$('raw');if(p.audio||p.video||p.iframe){raw.href=(p.audio||p.video||p.iframe).url;raw.classList.remove('hidden')}else raw.classList.add('hidden');
-    var L=$('links');L.innerHTML=(st.links||[]).map(function(l){return '<li><a href="'+esc(l.url)+'" rel="noopener">'+esc(l.name)+'</a></li>'}).join('');
-    var M=$('mirrors');var ms=st.mirrors||[];$('mirrorsCard').classList.toggle('hidden',!ms.length);M.innerHTML=ms.map(function(l){return '<li><a href="'+esc(l.url)+'" rel="noopener" target="_blank">'+esc(l.name)+'</a></li>'}).join('');
-  }
-  function decide(st){return Promise.resolve(st.on_air===true?true:st.on_air===false?false:!!st.live)}
-  function sessOf(st){return (st.rt&&st.rt.started_at)||st.session||null}
-  function after(st,live){render(st,live);if(!live&&playing){stop();return}
-    var s=sessOf(st);if(playing&&rtpc&&((curSess&&s&&s!==curSess)||/failed|closed/.test(rtpc.connectionState))){stop();start()}curSess=s}
-  function tick(){
-    if(CH==='rehearsal'){fetch('/api/rt/status?channel=rehearsal',{cache:'no-store'}).then(function(r){return r.json()}).then(function(q){var on=!!q.on_air;after({title:'LIVE PIT · rehearsal',subtitle:'unlisted sound check · not on the doors · anyone with this link can listen',now_playing:q.label||'',venue:q.by?('transmitter: '+q.by):'',webrtc:on,session:q.session,started_at:q.started_at,links:[],mirrors:[],sources:[]},on)}).catch(function(){bt.textContent='OFFLINE?'});return}
-    fetch('/live.json',{cache:'no-store'}).then(function(r){return r.json()}).then(function(st){return decide(st).then(function(live){after(st,live)})}).catch(function(){bt.textContent='OFFLINE?'});
-  }
-  function stop(){playing=false;if(rtpc){try{rtpc.close()}catch(e){}rtpc=null;audio.srcObject=null}if(hls){hls.destroy();hls=null}video.pause();video.removeAttribute('src');video.classList.remove('has');video.load();audio.pause();audio.removeAttribute('src');audio.classList.add('hidden');audio.load();play.textContent='▶ Tune in'}
-  function loadHls(){return new Promise(function(res,rej){if(window.Hls)return res();var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/hls.js@1/dist/hls.min.js';s.onload=res;s.onerror=rej;document.head.appendChild(s)})}
-  function start(){
-    var p=pick(S);
-    if(S.webrtc){audio.classList.remove('hidden');playing=true;play.textContent='■ Stop';var go=function(){window.pitListenRT(audio,CH).then(function(c){rtpc=c;curSess=sessOf(S)}).catch(function(e){if(p.audio)playAudio(p.audio);else{play.textContent='▶ Tune in';playing=false}})};if(window.pitListenRT)go();else{var sc=document.createElement('script');sc.src='/listen.js';sc.onload=go;document.head.appendChild(sc)}return;}
-    if(p.video&&p.video.type==='hls'){
-      video.classList.add('has');
-      if(video.canPlayType('application/vnd.apple.mpegurl')){video.src=p.video.url;video.play().catch(function(){})}
-      else loadHls().then(function(){hls=new Hls({lowLatencyMode:true,liveSyncDurationCount:3});hls.loadSource(p.video.url);hls.attachMedia(video);hls.on(Hls.Events.MANIFEST_PARSED,function(){video.play().catch(function(){})});hls.on(Hls.Events.ERROR,function(e,d){if(d.fatal&&p.audio){stop();playAudio(p.audio)}})}).catch(function(){if(p.audio)playAudio(p.audio)});
-      playing=true;play.textContent='■ Stop';return;
-    }
-    if(p.audio){playAudio(p.audio);return}
-    if(p.iframe){window.open(p.iframe.url,'_blank','noopener');return}
-  }
-  function playAudio(a){audio.classList.remove('hidden');audio.src=a.url+(a.url.indexOf('?')<0?'?':'&')+'t='+Date.now();audio.play().catch(function(){});playing=true;play.textContent='■ Stop'}
-  play.addEventListener('click',function(){playing?stop():start()});
-  $('share').addEventListener('click',function(){var d={title:'LIVE PIT · Open Source Orchestra',text:'Tune in: live from the OSO PIT at Zu Chiang Mai',url:location.origin+'/'};if(navigator.share){navigator.share(d).catch(function(){})}else{navigator.clipboard&&navigator.clipboard.writeText(d.url);this.textContent='Link copied'}});
-  tick();probeTimer=setInterval(tick,CH==='rehearsal'?5000:15000);
-  document.addEventListener('visibilitychange',function(){if(!document.hidden)tick()});
-})();
-</script>
-</body></html>`;
+// The theater-grade player lives in player.html (imported as Text, see wrangler rules).
 
 // ---------------------------------------------------------------- WIDGET
 const WIDGET_JS = `(function(){
