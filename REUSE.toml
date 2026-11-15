@@ -1,0 +1,16 @@
+version = 1
+SPDX-PackageName = "pit-live"
+SPDX-PackageSupplier = "Open Source Orchestra <contribute@opensourceorchestra.org>"
+SPDX-PackageDownloadLocation = "https://github.com/Open-Source-Orchestra/pit-live"
+
+[[annotations]]
+path = ["**/*.js", "**/*.mjs", "**/*.py", "**/*.sh", "broadcast.html", "player.html", "wrangler.example.jsonc", "public/sw.js", ".gitignore"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Shaka Lei Kaumaka / Open Source Orchestra and the AI ʻohana"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
+path = ["**/*.md", "NOTICE", "public/*.json", "public/*.webmanifest", "public/icons/**"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Shaka Lei Kaumaka / Open Source Orchestra and the AI ʻohana"
+SPDX-License-Identifier = "CC-BY-SA-4.0"

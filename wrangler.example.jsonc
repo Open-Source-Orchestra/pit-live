@@ -1,0 +1,11 @@
+// Copy to wrangler.jsonc and fill in. Secrets go in with `wrangler secret put` (see README), never in this file.
+{
+  "name": "my-pit-live",
+  "main": "worker.js",
+  "compatibility_date": "2026-11-13",
+  "workers_dev": true,
+  // "routes": [ { "pattern": "live.example.org", "custom_domain": true } ],
+  "rules": [ { "type": "Text", "globs": ["**/*.html"], "fallthrough": true } ],
+  "kv_namespaces": [ { "binding": "LIVE", "id": "<your KV namespace id>" } ],
+  "observability": { "enabled": false }
+}

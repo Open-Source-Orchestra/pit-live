@@ -1,0 +1,40 @@
+LIVE PIT · the Open Source Orchestra radio transponder
+Copyright (C) 2026 Shaka Lei Kaumaka / Open Source Orchestra and the AI ʻohana
+https://opensourceorchestra.org · https://live.zuchiangmai.app
+
+This program is free software: you can redistribute it and/or modify it under the
+terms of the GNU Affero General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later version.
+See LICENSE (AGPL-3.0-or-later). Documentation, page copy and design are licensed
+CC BY-SA 4.0 (LICENSES/CC-BY-SA-4.0.txt). REUSE.toml says which is which.
+
+Because this is network software, the AGPL means: if you run a modified version
+for other people (a website, an app, a station), you must offer those people the
+complete source of your version, under the same license. The player and the
+transmitter pages already link to the source; keep that link working in your fork.
+
+------------------------------------------------------------------------------
+ADDITIONAL TERMS UNDER SECTION 7(b) OF THE GNU AGPL v3 (author attribution)
+------------------------------------------------------------------------------
+As permitted by section 7(b), you must preserve the following author attribution
+in the "Appropriate Legal Notices" displayed by any work that contains this
+program or a substantial part of it (for example the footer or an "about" view
+of the player, the widget's link target, and the transmitter page), in a form
+reasonably visible to the people who use it:
+
+    Built on LIVE PIT by Open Source Orchestra:
+    Shaka Lei Kaumaka & the AI ʻohana (https://opensourceorchestra.org)
+
+You may add your own name next to it. You may not remove it, hide it, or present
+your fork as the original. These terms travel with every copy and every fork.
+(Section 7 also lets a recipient remove *other* non-permissive additional terms;
+this attribution term is a permitted 7(b) term and must be kept.)
+
+Media and names that are NOT ours to license
+- Photos of Devcon 8 are © their photographers / the Devcon team, used with
+  credit; takedown on request, no questions: https://opensourceorchestra.org/takedown/
+- Recordings belong to the people heard in them. A set is published only with the
+  consent of everyone audible (see PROTOCOL.md · consent law).
+- "Cloudflare", "Subcult", "Onda", "MDRN", "OBS" and other names are their owners'.
+
+This is a plain-language notice, not legal advice.

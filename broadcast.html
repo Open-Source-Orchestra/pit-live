@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>LIVE PIT · transmitter</title>
+<style>
+:root{--bg:#0b0a0e;--fg:#f2eee6;--dim:#a79f93;--hot:#ff3b3b;--gold:#e8b84a;--card:#15121a;--line:#2a2433;--ok:#8fe3a1;--bad:#ff9b9b;--warn:#ffd27a;--teal:#58d6c4}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:640px;margin:0 auto;padding:18px 16px 60px}
+h1{font-size:26px;margin:6px 0 2px}h2{font-size:15px;letter-spacing:1px;text-transform:uppercase;color:var(--dim);margin:0 0 10px}
+.sub{color:var(--dim);margin:0 0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin:12px 0}
+label{display:block;margin:10px 0 4px;color:var(--dim);font-size:14px}
+input[type=text],select{width:100%;font:inherit;padding:12px;border-radius:10px;border:1px solid #3a3242;background:#0f0d13;color:#fff}
+.sec{-webkit-text-security:disc}
+button{font:inherit;cursor:pointer;border:0;border-radius:12px}
+button.mid{width:100%;font-weight:700;padding:12px;background:#2a2633;color:#eee;margin-top:8px}
+button.link{background:transparent;color:var(--gold);padding:0;text-decoration:underline}
+button.big{width:100%;font-size:22px;font-weight:800;padding:18px;border-radius:14px;background:var(--hot);color:#fff;margin:14px 0 4px;box-shadow:0 10px 30px -12px rgba(255,59,59,.8)}
+button.big.reh{background:var(--teal);color:#06201c;box-shadow:0 10px 30px -12px rgba(88,214,196,.7)}
+button.big[disabled]{opacity:.35;cursor:not-allowed;box-shadow:none}
+button.big.stop{background:#444;box-shadow:none;color:#fff}
+.meter{height:16px;background:#1b1720;border-radius:8px;overflow:hidden;margin-top:12px;border:1px solid var(--line)}.meter i{display:block;height:100%;width:0;background:linear-gradient(90deg,#4caf50,#e8b84a 70%,#ff3b3b);transition:width .05s linear}
+.msg{margin-top:10px;color:var(--dim);white-space:pre-wrap;font-size:14px}.msg.ok{color:var(--ok)}.msg.bad{color:var(--bad)}.msg.warn{color:var(--warn)}
+.hid{display:none!important}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:#2a0b0b;color:#ffd1d1;font-weight:700;letter-spacing:1px;font-size:13px}
+.badge .dot{width:10px;height:10px;border-radius:50%;background:var(--hot);animation:pulse 1.6s infinite}
+.badge.warn{background:#3a2a0b;color:#ffe2a8}.badge.warn .dot{background:var(--warn);animation:none}
+.badge.reh{background:#0b2a26;color:#c9fff6}.badge.reh .dot{background:var(--teal)}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,59,59,.7)}70%{box-shadow:0 0 0 12px rgba(255,59,59,0)}100%{box-shadow:0 0 0 0 rgba(255,59,59,0)}}
+@media (prefers-reduced-motion:reduce){.badge .dot{animation:none}}
+.stats{margin-top:10px;font-variant-numeric:tabular-nums;color:var(--dim);font-size:14px}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.row button{flex:1 1 180px;padding:10px 12px;background:#2a2633;color:#eee;font-weight:600}
+.row button.golive{background:var(--hot);color:#fff}
+.choice{display:flex;gap:8px;flex-wrap:wrap}.choice label{flex:1 1 220px;margin:0;display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid #3a3242;border-radius:12px;background:#0f0d13;color:var(--fg);cursor:pointer}
+.choice input{margin-top:4px;accent-color:var(--hot)}.choice small{display:block;color:var(--dim)}
+.choice label.sel{border-color:var(--gold)}
+details{margin-top:10px;color:var(--dim);font-size:14px}summary{cursor:pointer}
+code{background:#0f0d13;padding:2px 6px;border-radius:6px;font-size:13px;word-break:break-all}
+pre{white-space:pre-wrap;font-size:12px;color:var(--dim);background:#0f0d13;padding:10px;border-radius:10px;max-height:180px;overflow:auto}
+.ok-tick{color:var(--ok);font-weight:700}
+footer{color:var(--dim);font-size:13px;margin-top:24px;border-top:1px solid var(--line);padding-top:12px}
+a{color:var(--gold)}
+</style></head>
+<body><main>
+<h1>🎚️ LIVE PIT · transmitter</h1>
+<p class="sub">Your browser is the transmitter. Rehearse privately first, then go on air: every door with the widget lights up by itself. Keep this tab open and the screen awake while you transmit.</p>
+
+<section class="card" id="c-signin">
+  <h2>1 · Sign in</h2>
+  <div id="signedin" class="hid"><span class="ok-tick">✓ signed in as <span id="who"></span></span> · <button class="link" id="changeTok" type="button">use another key</button></div>
+  <div id="signin">
+    <input id="tok" type="text" class="sec" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="paste the transmitter key (starts with pit_tx_)" aria-label="transmitter key">
+    <button id="saveTok" class="mid" type="button">Sign in on this device</button>
+    <div class="msg">Easiest: tap the one-tap sign-in link from the office (it ends in <code>#k=…</code>). It signs you in by itself and remembers this device.</div>
+  </div>
+  <div class="msg" id="m1"></div>
+</section>
+
+<section class="card" id="c-mic">
+  <h2>2 · Sound check</h2>
+  <button id="test" class="mid" type="button">🎤 Test the sound</button>
+  <select id="dev" class="hid" aria-label="audio input"><option value="">default input</option></select>
+  <div class="meter" aria-hidden="true"><i id="vu"></i></div>
+  <div class="msg" id="m2">Tap “Test the sound”. The browser asks for the microphone once. Pick the Soundcraft / USB input and watch the meter move.</div>
+  <details><summary>no mixer here? use a test tone</summary><button id="tone" class="mid" type="button">use a 440 Hz test tone instead</button></details>
+</section>
+
+<section class="card" id="c-text">
+  <h2>3 · On-air text</h2>
+  <label for="label">Who is on the floor</label><input id="label" type="text" value="OSO PIT main mix · Soundcraft USB">
+  <label for="message">Message (shows on the doors)</label><input id="message" type="text" placeholder="e.g. Nomad Market I · 4Seas · music from 18:10">
+  <button id="updText" class="mid hid" type="button">✏️ Update on-air text</button>
+</section>
+
+<section class="card" id="c-where">
+  <h2>4 · Where to</h2>
+  <div class="choice" role="radiogroup">
+    <label id="l-reh"><input type="radio" name="ch" value="rehearsal" checked><span><strong>🎧 Rehearsal</strong><small>unlisted · the doors stay dark · listen on your phone with a private link</small></span></label>
+    <label id="l-live"><input type="radio" name="ch" value="live"><span><strong>🔴 On air</strong><small>every door with the widget lights up · the whole world can listen</small></span></label>
+  </div>
+</section>
+
+<button id="go" class="big reh" type="button" disabled>🎧 START REHEARSAL</button>
+<div class="msg" id="m3">Sign in and do the sound check first. Then this button wakes up.</div>
+
+<section class="card hid" id="c-onair">
+  <div class="badge" id="badge"><span class="dot"></span><span id="state">ON AIR</span></div>
+  <div class="stats"><span id="since"></span> · <span id="listeners">0 listening</span> · <span id="kbps">— kbit/s</span> · <span id="conn"></span></div>
+  <div class="row">
+    <button id="golive" class="golive hid" type="button">🔴 Go on air now</button>
+    <button id="phone" class="hid" type="button">📱 Rehearsal listen link</button>
+    <button id="share" type="button">🔗 Share the door</button>
+    <button id="selfcheck" type="button">👂 Check that listeners hear you</button>
+  </div>
+  <div class="msg" id="m4"></div>
+  <button id="stop" class="big stop" type="button">⏹ STOP</button>
+</section>
+
+<section class="card">
+  <h2>Also: OBS or any WHIP app</h2>
+  <p class="msg">Open standards, no lock-in. Publish with <strong>WHIP</strong>: server <code>https://live.zuchiangmai.app/whip</code> (rehearsal: <code>/whip?channel=rehearsal</code>), Bearer token = your transmitter key (OBS 30+: Settings → Stream → Service “WHIP”). Anyone can pull with <strong>WHEP</strong> from <code>https://live.zuchiangmai.app/whep</code>. State of the air: <a href="/live.json">/live.json</a>.</p>
+</section>
+
+<section class="card">
+  <h2>Diagnostics</h2>
+  <pre id="diag"></pre>
+  <button id="copyDiag" class="mid" type="button">copy diagnostics (send this to the office if anything is odd)</button>
+</section>
+
+<footer>The PIT is the floor, not the stage. This transmitter is a public good: <a href="https://github.com/Open-Source-Orchestra/pit-live">source (AGPL-3.0)</a> · <a href="https://github.com/Open-Source-Orchestra/pit-live/blob/main/PROTOCOL.md">operating protocol</a> · <a href="https://opensourceorchestra.org/join/">join / host</a>. No cookies, no tracking. Your key stays on this device.<br>Built on LIVE PIT by Open Source Orchestra: Shaka Lei Kaumaka &amp; the AI ʻohana. Forks keep this credit and stay open.</footer>
+</main>
+<script>
+(function(){
+var $=function(i){return document.getElementById(i)};
+var BASE='';
+var Q=new URLSearchParams(location.search);
+var FORCE_RELAY=Q.get('relay')==='1';
+var tok='',who='',legacy=false,stream=null,pc=null,sessionId=null,curCh='rehearsal',ctx=null,raf=null,rec=null,wake=null,statTimer=null,pollTimer=null,connTimer=null,lastBytes=0,lastT=0,reconnects=0,fails=0,relayNow=false,wantOnAir=false,signed=false,quietSince=0,useTone=false,lastErr='',iceInfo='—';
+function say(id,t,cls){var e=$(id);e.textContent=t||'';e.className='msg'+(cls?' '+cls:'')}
+function sleep(ms){return new Promise(function(r){setTimeout(r,ms)})}
+function waitIce(p,ms){return new Promise(function(r){if(p.iceGatheringState==='complete')return r();p.onicegatheringstatechange=function(){if(p.iceGatheringState==='complete')r()};setTimeout(r,ms||2000)})}
+function H(){return {'content-type':'application/json','authorization':'Bearer '+tok}}
+function chName(c){return c==='rehearsal'?'rehearsal':'on air'}
+
+/* ---------- 1 · sign in ---------- */
+function cleanKey(raw){
+  var s=String(raw||'').trim();
+  var m=s.match(/[#&]k=([^&\s]+)/);if(m){try{s=decodeURIComponent(m[1])}catch(e){s=m[1]}}
+  s=s.replace(/^bearer\s+/i,'').replace(/^["'`<(\[]+/,'').replace(/["'`>)\].,;]+$/,'');
+  var parts=s.split(/\s+/).filter(Boolean);
+  if(parts.length>1){var pk=parts.filter(function(x){return /^pit_tx_[A-Za-z0-9]{16,}$/.test(x)})[0]||parts.filter(function(x){return /^[A-Za-z0-9_-]{24,64}$/.test(x)})[0];if(pk)s=pk}
+  return s}
+function hint(k){
+  if(/^cfut_|^cfat_|^cfk_/i.test(k))return 'that is a Cloudflare token, not the transmitter key. Use the one-tap sign-in link from the office (Telegram DM).';
+  if(/^(ghp_|gho_|github_pat_)/.test(k))return 'that is a GitHub token, not the transmitter key.';
+  if(/^(sk-|xox|AIza)/.test(k))return 'that looks like another service key, not the transmitter key.';
+  if(k.length<20)return 'that is too short to be a transmitter key (they start with pit_tx_).';
+  return 'this key was not accepted (wrong, old or revoked). Tap the newest sign-in link from the office, or ask for a fresh one.'}
+function showSignin(on){$('signin').classList.toggle('hid',!on);$('signedin').classList.toggle('hid',on)}
+async function whoami(quiet){
+  if(!tok){signed=false;showSignin(true);gate();return false}
+  try{var r=await fetch(BASE+'/api/rt/whoami',{headers:H(),cache:'no-store'});
+    if(r.status===401){signed=false;showSignin(true);
+      if(legacy){legacy=false;tok='';try{localStorage.removeItem('pitlive_tok')}catch(e){}say('m1','sign in with the transmitter key or the one-tap link from the office.')}
+      else if(!quiet)say('m1','✗ '+hint(tok),'bad');gate();return false}
+    var j=await r.json();if(!j.ok){signed=false;say('m1','⚠ '+(j.error||'server problem'),'bad');gate();return false}
+    signed=true;who=j.name||'';$('who').textContent=who+(j.role==='admin'?' (admin)':'');showSignin(false);say('m1','');
+    try{localStorage.setItem('pitlive_tx',tok);if(legacy)localStorage.removeItem('pitlive_tok')}catch(e){}legacy=false;gate();return true
+  }catch(e){signed=false;say('m1','network: '+e.message+' · check the internet connection, then tap Sign in again','bad');gate();return false}}
+function loadTok(){try{var h=location.hash.match(/[#&]k=([^&]+)/);
+  if(h){tok=cleanKey(decodeURIComponent(h[1]));history.replaceState(null,'',location.pathname+location.search);return}
+  tok=localStorage.getItem('pitlive_tx')||'';
+  if(!tok){var old=localStorage.getItem('pitlive_tok')||'';if(old){tok=cleanKey(old);legacy=true}}}catch(e){}}
+$('saveTok').onclick=function(){tok=cleanKey($('tok').value);$('tok').value=tok;legacy=false;say('m1','checking…');whoami(false)};
+$('tok').addEventListener('keydown',function(e){if(e.key==='Enter')$('saveTok').click()});
+$('tok').addEventListener('paste',function(){setTimeout(function(){$('saveTok').click()},60)});
+$('changeTok').onclick=function(){showSignin(true);$('tok').value='';$('tok').focus()};
+
+/* ---------- 2 · sound check ---------- */
+function friendly(e){var n=e&&e.name||'';var m=e&&e.message||String(e);
+  if(n==='NotAllowedError'||n==='SecurityError')return 'microphone blocked: allow the microphone for live.zuchiangmai.app (the icon left of the address), then tap again. On a Mac also check System Settings → Privacy & Security → Microphone → your browser.';
+  if(n==='NotFoundError')return 'no audio input found: is the Soundcraft USB plugged in and switched on?';
+  if(n==='NotReadableError')return 'the input is busy in another app (Zoom, OBS, GarageBand?): close it and tap again';
+  if(n==='OverconstrainedError')return 'that input refused the settings, falling back did not help: pick another input above';
+  return n?n+' — '+m:m}
+async function getStream(id){
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error('this browser has no microphone API: open this page in Chrome, Safari or Firefox (not inside Telegram/Instagram)');
+  var base={echoCancellation:false,noiseSuppression:false,autoGainControl:false};
+  var tries=[];if(id){tries.push({audio:Object.assign({deviceId:{exact:id},channelCount:2,sampleRate:48000},base)});tries.push({audio:Object.assign({deviceId:{exact:id}},base)})}
+  tries.push({audio:Object.assign({channelCount:2},base)});tries.push({audio:base});tries.push({audio:true});
+  var last=null;for(var i=0;i<tries.length;i++){try{return await navigator.mediaDevices.getUserMedia(tries[i])}catch(e){last=e;if(e&&(e.name==='NotAllowedError'||e.name==='SecurityError'))break}}
+  throw last||new Error('microphone unavailable')}
+function stopStream(){if(raf)cancelAnimationFrame(raf);raf=null;$('vu').style.width='0';if(stream){stream.getTracks().forEach(function(t){t.stop()});stream=null}}
+function meter(s){ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();if(ctx.state==='suspended')ctx.resume();var src=ctx.createMediaStreamSource(s),an=ctx.createAnalyser();an.fftSize=512;src.connect(an);var buf=new Uint8Array(an.frequencyBinCount);quietSince=Date.now();
+  (function loop(){an.getByteTimeDomainData(buf);var m=0;for(var i=0;i<buf.length;i++){var v=Math.abs(buf[i]-128);if(v>m)m=v}var pct=Math.min(100,m*100/128);$('vu').style.width=pct+'%';if(pct>2)quietSince=Date.now();raf=requestAnimationFrame(loop)})()}
+async function listDevices(){try{var ds=await navigator.mediaDevices.enumerateDevices();var sel=$('dev');var cur=stream&&stream.getAudioTracks()[0]&&stream.getAudioTracks()[0].getSettings().deviceId;sel.innerHTML='';
+  ds.filter(function(d){return d.kind==='audioinput'}).forEach(function(d){var o=document.createElement('option');o.value=d.deviceId;o.textContent=d.label||('input '+d.deviceId.slice(0,6));if(d.deviceId===cur)o.selected=true;sel.appendChild(o)});sel.classList.remove('hid');
+  if(!sel.dataset.auto){sel.dataset.auto='1';var pick=Array.prototype.find.call(sel.options,function(o){return /soundcraft|notepad|nano|usb|mixer|interface|codec/i.test(o.textContent)});if(pick&&pick.value!==cur){sel.value=pick.value;return true}}}catch(e){}return false}
+async function soundCheck(id){
+  try{useTone=false;if(pc)return say('m2','already transmitting: STOP first to change the input','warn');stopStream();say('m2','asking for the microphone…');stream=await getStream(id);var sw=await listDevices();if(sw){stopStream();stream=await getStream($('dev').value)}
+    var t=stream.getAudioTracks()[0];var st=t.getSettings();meter(stream);
+    say('m2','mic: '+(t.label||'input')+' · '+(st.channelCount||'?')+' ch · '+(st.sampleRate||'?')+' Hz\nplay something: the meter must move. Silent? check the mixer’s USB send / input gain.','ok');gate()
+  }catch(e){lastErr=friendly(e);say('m2','✗ '+lastErr,'bad');gate()}}
+$('test').onclick=function(){soundCheck($('dev').value)};
+$('dev').onchange=function(){soundCheck($('dev').value)};
+$('tone').onclick=function(){if(pc)return;stopStream();useTone=true;ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();if(ctx.state==='suspended')ctx.resume();var o=ctx.createOscillator(),g=ctx.createGain(),d=ctx.createMediaStreamDestination();o.frequency.value=440;g.gain.value=.2;o.connect(g);g.connect(d);o.start();stream=d.stream;meter(stream);say('m2','test tone ready (440 Hz), for checks only','warn');gate()};
+setInterval(function(){if(stream&&!useTone&&quietSince&&Date.now()-quietSince>8000&&$('m2').className.indexOf('bad')<0)say('m2','⚠ meter flat for 8 s: nothing is coming in. Check the mixer’s USB send, the input gain, and that the right input is picked above.','warn')},2000);
+
+/* ---------- 4 · where to ---------- */
+function chosen(){var r=document.querySelector('input[name=ch]:checked');return r?r.value:'rehearsal'}
+function paintChoice(){var c=chosen();$('l-reh').classList.toggle('sel',c==='rehearsal');$('l-live').classList.toggle('sel',c==='live');
+  $('go').textContent=c==='rehearsal'?'🎧 START REHEARSAL':'🔴 GO ON AIR';$('go').className='big'+(c==='rehearsal'?' reh':'');gate()}
+Array.prototype.forEach.call(document.querySelectorAll('input[name=ch]'),function(r){r.addEventListener('change',paintChoice)});
+function gate(){var ready=signed&&!!stream;$('go').disabled=!ready||!!pc;
+  say('m3',ready?(pc?'':(chosen()==='rehearsal'?'ready: tap START REHEARSAL (the doors stay dark)':'ready: tap GO ON AIR')):(signed?'do the sound check (step 2)':'sign in (step 1)'+(stream?'':' and do the sound check (step 2)')),ready?'ok':'')}
+
+/* ---------- transmit ---------- */
+async function getIce(){try{var j=await fetch(BASE+'/api/rt/ice',{headers:H(),cache:'no-store'}).then(function(r){return r.json()});if(j&&j.iceServers&&j.iceServers.length){iceInfo=j.turn?'STUN+TURN':'STUN only';return j.iceServers}}catch(e){}iceInfo='STUN (fallback)';return [{urls:'stun:stun.cloudflare.com:3478'}]}
+function showOnAir(on){$('c-onair').classList.toggle('hid',!on);$('go').classList.toggle('hid',on);$('m3').classList.toggle('hid',on);$('updText').classList.toggle('hid',!on);
+  $('golive').classList.toggle('hid',!(on&&curCh==='rehearsal'));$('phone').classList.toggle('hid',!(on&&curCh==='rehearsal'));$('share').classList.toggle('hid',on&&curCh==='rehearsal');
+  Array.prototype.forEach.call(document.querySelectorAll('input[name=ch]'),function(r){r.disabled=on});gate()}
+function setState(s,kind){$('state').textContent=s;$('badge').className='badge'+(kind?' '+kind:'')}
+function connected(){return pc&&pc.connectionState==='connected'}
+async function publish(){
+  var ch=curCh;
+  try{say('m4',(ch==='rehearsal'?'starting the rehearsal':'going on air')+'…'+(relayNow||FORCE_RELAY?' (via the relay)':''));
+    var servers=await getIce();
+    var conf={iceServers:servers,bundlePolicy:'max-bundle'};if(FORCE_RELAY||relayNow)conf.iceTransportPolicy='relay';
+    pc=new RTCPeerConnection(conf);
+    pc.addTransceiver(stream.getAudioTracks()[0],{direction:'sendonly'});
+    var offer=await pc.createOffer();offer.sdp=offer.sdp.replace(/a=fmtp:(\d+) /,'a=fmtp:$1 stereo=1;sprop-stereo=1;maxaveragebitrate=160000;');await pc.setLocalDescription(offer);
+    await waitIce(pc,(FORCE_RELAY||relayNow)?3000:2000);
+    var rr=await fetch(BASE+'/api/rt/publish',{method:'POST',headers:H(),body:JSON.stringify({sdp:pc.localDescription.sdp,channel:ch,label:$('label').value,message:$('message').value})});
+    var txt=await rr.text();var res;try{res=JSON.parse(txt)}catch(e){throw new Error('server '+rr.status+': '+txt.slice(0,140))}
+    if(!res.ok){if(rr.status===401){signed=false;showSignin(true);say('m1','✗ '+hint(tok),'bad');throw new Error('key not accepted: sign in again (step 1)')}throw new Error(res.error||'publish failed')}
+    sessionId=res.sessionId;await pc.setRemoteDescription(res.answer);
+    pc.onconnectionstatechange=onState;
+    setState('CONNECTING…','warn');showOnAir(true);$('since').textContent='since '+new Date().toLocaleTimeString();
+    if(connTimer)clearTimeout(connTimer);connTimer=setTimeout(function(){if(pc&&wantOnAir&&!connected()){fails++;say('m4','⚠ no link after 12 s'+(relayNow?'':': switching to the relay (works on strict venue wifi)')+'…','warn');relayNow=true;scheduleReconnect()}},12000);
+    startRec();keepAwake();startStats();startPoll();
+  }catch(e){lastErr=e.message;say('m4','✗ '+e.message,'bad');teardownPc();
+    if(wantOnAir&&/server 5|network|failed to fetch|SFU|load failed/i.test(e.message))scheduleReconnect();else{wantOnAir=false;showOnAir(false);say('m3','✗ '+e.message,'bad')}}}
+function onState(){if(!pc)return;var c=pc.connectionState;$('conn').textContent=c+(relayNow||FORCE_RELAY?' · relay':'');
+  if(c==='connected'){reconnects=0;if(connTimer){clearTimeout(connTimer);connTimer=null}
+    if(curCh==='rehearsal'){setState('REHEARSAL · doors dark','reh');say('m4','🎧 Rehearsal running. Only people with the rehearsal link hear it. Ready? tap “Go on air now”.','ok')}
+    else{setState('ON AIR');say('m4','🔴 You are on air on every door: https://live.zuchiangmai.app/ · keep this tab open.','ok')}}
+  else if(c==='failed'){fails++;if(fails>=2&&!relayNow){relayNow=true}if(wantOnAir){setState('NEEDS ATTENTION','warn');say('m4','⚠ link failed: reconnecting'+(relayNow?' via the relay':'')+'…','warn');scheduleReconnect()}}
+  else if(c==='disconnected'){setState('NEEDS ATTENTION','warn');say('m4','⚠ link wobbling: waiting 4 s…','warn');setTimeout(function(){if(pc&&wantOnAir&&!connected()){say('m4','⚠ still down: reconnecting…','warn');scheduleReconnect()}},4000)}}
+function teardownPc(){if(statTimer)clearInterval(statTimer);statTimer=null;if(connTimer){clearTimeout(connTimer);connTimer=null}if(pc){pc.onconnectionstatechange=null;try{pc.close()}catch(e){}pc=null}}
+function scheduleReconnect(){if(!wantOnAir)return;teardownPc();reconnects++;
+  if(reconnects>8){wantOnAir=false;showOnAir(false);say('m3','✗ could not reconnect after 8 tries. Check the network (a phone hotspot often works where venue wifi blocks WebRTC), then tap the button again. Copy the diagnostics below for the office.','bad');return}
+  var d=Math.min(15000,1500*reconnects);say('m4','⚠ reconnecting in '+Math.round(d/1000)+' s (try '+reconnects+'/8)…','warn');setTimeout(function(){if(wantOnAir&&!pc)publish()},d)}
+async function stopServer(ch,sid){try{await fetch(BASE+'/api/rt/stop',{method:'POST',headers:H(),body:JSON.stringify({sessionId:sid,channel:ch})})}catch(e){}}
+async function stop(){var ch=curCh,sid=sessionId;wantOnAir=false;stopRec();teardownPc();if(pollTimer)clearInterval(pollTimer);pollTimer=null;releaseWake();
+  await stopServer(ch,sid);sessionId=null;setState('OFF AIR','warn');showOnAir(false);say('m3',(ch==='rehearsal'?'rehearsal ended':'off air')+' · closed cleanly','ok')}
+$('go').onclick=function(){if($('go').disabled)return;curCh=chosen();wantOnAir=true;reconnects=0;fails=0;relayNow=false;publish()};
+$('stop').onclick=stop;
+$('golive').onclick=async function(){if(!pc)return;var sid=sessionId;teardownPc();await stopServer('rehearsal',sid);sessionId=null;
+  curCh='live';document.querySelector('input[name=ch][value=live]').checked=true;paintChoice();wantOnAir=true;reconnects=0;fails=0;publish()};
+$('phone').onclick=function(){var u=location.origin+'/?ch=rehearsal';if(navigator.share){navigator.share({title:'LIVE PIT rehearsal',url:u}).catch(function(){})}else{navigator.clipboard&&navigator.clipboard.writeText(u);this.textContent='✓ copied: '+u}};
+function beacon(){if(pc&&sessionId){try{fetch(BASE+'/api/rt/stop',{method:'POST',headers:H(),body:JSON.stringify({sessionId:sessionId,channel:curCh}),keepalive:true})}catch(e){}}}
+window.addEventListener('pagehide',beacon);
+window.addEventListener('beforeunload',function(e){if(pc&&wantOnAir){e.preventDefault();e.returnValue='';}});
+
+/* stats + listeners */
+function startStats(){lastBytes=0;lastT=0;if(statTimer)clearInterval(statTimer);statTimer=setInterval(async function(){if(!pc)return;try{var s=await pc.getStats();var b=0;s.forEach(function(x){if(x.type==='outbound-rtp'&&x.kind==='audio')b=x.bytesSent});var now=Date.now();if(lastT){var k=Math.round((b-lastBytes)*8/(now-lastT));$('kbps').textContent=k+' kbit/s'}lastBytes=b;lastT=now}catch(e){}},2000)}
+function startPoll(){if(pollTimer)clearInterval(pollTimer);var f=async function(){try{var st=await fetch(BASE+'/api/rt/status?channel='+curCh,{cache:'no-store'}).then(function(r){return r.json()});if(!pc||!sessionId)return;
+  if(st.session&&sessionId.indexOf(st.session)!==0){setState('REPLACED','warn');say('m4','⚠ another transmitter took over ('+(st.by||'?')+' · '+(st.label||'')+'). You are no longer heard here. STOP, or tap the button again to take it back.','warn');return}
+  if(!st.session&&connected()){say('m4','⚠ the server lost your session: reconnecting…','warn');scheduleReconnect();return}
+  $('listeners').textContent='≈'+(st.listeners||0)+' joined'}catch(e){}};f();pollTimer=setInterval(f,10000)}
+
+/* self-check as a listener */
+function loadListen(){return new Promise(function(res,rej){if(window.pitListenRT)return res();var s=document.createElement('script');s.src=BASE+'/listen.js';s.onload=res;s.onerror=rej;document.head.appendChild(s)})}
+$('selfcheck').onclick=async function(){say('m4','👂 joining as a test listener for 5 s…');try{await loadListen();window.__pitLiveBase=BASE;var a=new Audio();a.muted=true;var l=await window.pitListenRT(a,curCh);await sleep(5000);var bytes=0;(await l.getStats()).forEach(function(s){if(s.type==='inbound-rtp'&&s.kind==='audio')bytes=s.bytesReceived});try{l.close()}catch(e){}
+  if(bytes>2000)say('m4','✅ listeners receive you: '+Math.round(bytes*8/5000)+' kbit/s arrived at a test listener ('+chName(curCh)+').','ok');else say('m4','❌ a test listener received nothing. Is the meter moving? If yes: STOP, then start again.','bad')}catch(e){say('m4','❌ listener check failed: '+e.message,'bad')}};
+$('share').onclick=function(){var d={title:'LIVE PIT · Open Source Orchestra',text:'Tune in: live from the OSO PIT',url:'https://live.zuchiangmai.app/'};if(navigator.share){navigator.share(d).catch(function(){})}else{navigator.clipboard&&navigator.clipboard.writeText(d.url);this.textContent='✓ link copied'}};
+$('updText').onclick=async function(){try{var r=await fetch(BASE+'/api/rt/text',{method:'POST',headers:H(),body:JSON.stringify({channel:curCh,label:$('label').value,message:$('message').value})}).then(function(r){return r.json()});say('m4',r.ok?'✏️ on-air text updated':'✗ '+(r.error||'failed'),r.ok?'ok':'bad')}catch(e){say('m4','✗ '+e.message,'bad')}};
+
+/* local recording (safety copy, stays on this device) */
+function startRec(){if(rec&&rec.state!=='inactive')return;try{var mt=['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/ogg;codecs=opus'].filter(function(m){return window.MediaRecorder&&MediaRecorder.isTypeSupported(m)})[0];if(!mt)return;rec=new MediaRecorder(stream,{mimeType:mt});var chunks=[];rec.ondataavailable=function(e){if(e.data.size)chunks.push(e.data)};
+  rec.onstop=function(){var b=new Blob(chunks,{type:mt.split(';')[0]});if(b.size<1000)return;var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='live-pit-'+new Date().toISOString().replace(/[:.]/g,'-')+(mt.indexOf('mp4')>=0?'.m4a':'.webm');a.textContent='⬇ download the local recording ('+(b.size/1048576).toFixed(1)+' MB)';a.style.color='#e8b84a';$('m3').appendChild(document.createElement('br'));$('m3').appendChild(a)};rec.start(10000)}catch(e){}}
+function stopRec(){try{if(rec&&rec.state!=='inactive')rec.stop()}catch(e){}rec=null}
+
+/* keep the screen awake */
+async function keepAwake(){try{if(navigator.wakeLock&&!wake){wake=await navigator.wakeLock.request('screen');wake.addEventListener('release',function(){wake=null})}}catch(e){}}
+function releaseWake(){try{if(wake)wake.release()}catch(e){}wake=null}
+document.addEventListener('visibilitychange',function(){if(!document.hidden&&wantOnAir)keepAwake()});
+
+/* diagnostics */
+function diag(){var d=['time '+new Date().toISOString(),'page '+location.origin+location.pathname+location.search,'ua '+navigator.userAgent,'secure '+window.isSecureContext,'mediaDevices '+!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia),'RTCPeerConnection '+!!window.RTCPeerConnection,'MediaRecorder '+!!window.MediaRecorder,'wakeLock '+!!navigator.wakeLock,'key '+(tok?('…'+tok.slice(-4)+' ('+tok.length+' chars)'):'none'),'signed '+signed+(who?' as '+who:''),'stream '+!!stream+(useTone?' (tone)':''),'channel '+curCh,'ice '+iceInfo+(relayNow||FORCE_RELAY?' · relay':''),'pc '+(pc?pc.connectionState:'none'),'session '+(sessionId?sessionId.slice(0,8):'none'),'reconnects '+reconnects+' · fails '+fails,'lastErr '+lastErr].join('\n');$('diag').textContent=d;return d}
+$('copyDiag').onclick=function(){var d=diag();navigator.clipboard&&navigator.clipboard.writeText(d);this.textContent='✓ copied: paste it to the office'};
+setInterval(diag,3000);
+
+/* boot */
+loadTok();paintChoice();whoami(false);diag();
+})();
+</script>
+</body></html>
