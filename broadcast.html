@@ -49,11 +49,11 @@ a{color:var(--gold)}
 
 <section class="card" id="c-signin">
   <h2>1 · Sign in</h2>
-  <div id="signedin" class="hid"><span class="ok-tick">✓ signed in as <span id="who"></span></span> · <button class="link" id="changeTok" type="button">use another key</button></div>
+  <div id="signedin" class="hid"><span class="ok-tick">✓ signed in as <span id="who" translate="no"></span></span> · <button class="link" id="changeTok" type="button">use another key</button></div>
   <div id="signin">
-    <input id="tok" type="text" class="sec" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="paste the transmitter key (starts with pit_tx_)" aria-label="transmitter key">
+    <input id="tok" type="text" class="sec" translate="no" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="paste the transmitter key (starts with pit_tx_)" aria-label="transmitter key">
     <button id="saveTok" class="mid" type="button">Sign in on this device</button>
-    <div class="msg">Easiest: tap the one-tap sign-in link from the office (it ends in <code>#k=…</code>). It signs you in by itself and remembers this device.</div>
+    <div class="msg">Easiest: tap the one-tap sign-in link from the office (it ends in <code translate="no">#k=…</code>). It signs you in by itself and remembers this device.</div>
   </div>
   <div class="msg" id="m1"></div>
 </section>
@@ -100,12 +100,12 @@ a{color:var(--gold)}
 
 <section class="card">
   <h2>Also: OBS or any WHIP app</h2>
-  <p class="msg">Open standards, no lock-in. Publish with <strong>WHIP</strong>: server <code>https://live.zuchiangmai.app/whip</code> (rehearsal: <code>/whip?channel=rehearsal</code>), Bearer token = your transmitter key (OBS 30+: Settings → Stream → Service “WHIP”). Anyone can pull with <strong>WHEP</strong> from <code>https://live.zuchiangmai.app/whep</code>. State of the air: <a href="/live.json">/live.json</a>.</p>
+  <p class="msg">Open standards, no lock-in. Publish with <strong>WHIP</strong>: server <code translate="no">https://live.zuchiangmai.app/whip</code> (rehearsal: <code translate="no">/whip?channel=rehearsal</code>), Bearer token = your transmitter key (OBS 30+: Settings → Stream → Service “WHIP”). Anyone can pull with <strong>WHEP</strong> from <code translate="no">https://live.zuchiangmai.app/whep</code>. State of the air: <a href="/live.json">/live.json</a>.</p>
 </section>
 
 <section class="card">
   <h2>Diagnostics</h2>
-  <pre id="diag"></pre>
+  <pre id="diag" translate="no"></pre>
   <button id="copyDiag" class="mid" type="button">copy diagnostics (send this to the office if anything is odd)</button>
 </section>
 
@@ -247,7 +247,7 @@ function dropCard(a,b){var d=document.createElement('details');d.open=true;d.sty
    'license: performers keep the rights to their performance · our words CC BY-SA 4.0 · Built on LIVE PIT by Open Source Orchestra',
    'support the artist: Onda, every play sends a wave (getonda.org) · tip: artist.opensourceorchestra.org/tip/?artist=shaka',
    'home: the SHAKA OHANA collection on Subcult (subcult.fm) → then add the link to the PIT memory'].join('\n');
-  var pre=document.createElement('pre');pre.textContent=txt;d.appendChild(pre);var c=document.createElement('button');c.className='mid';c.type='button';c.textContent='copy the drop card';c.onclick=function(){if(navigator.clipboard)navigator.clipboard.writeText(txt);c.textContent='✓ copied: upload the recording + this card to Subcult once everyone said yes'};d.appendChild(c);$('m3').appendChild(d)}
+  var pre=document.createElement('pre');pre.setAttribute('translate','no');pre.textContent=txt;d.appendChild(pre);var c=document.createElement('button');c.className='mid';c.type='button';c.textContent='copy the drop card';c.onclick=function(){if(navigator.clipboard)navigator.clipboard.writeText(txt);c.textContent='✓ copied: upload the recording + this card to Subcult once everyone said yes'};d.appendChild(c);$('m3').appendChild(d)}
 $('go').onclick=function(){if($('go').disabled)return;curCh=chosen();wantOnAir=true;reconnects=0;fails=0;relayNow=false;publish()};
 $('stop').onclick=stop;
 $('golive').onclick=async function(){if(!pc)return;var sid=sessionId;teardownPc();await stopServer('rehearsal',sid);sessionId=null;
@@ -290,4 +290,5 @@ setInterval(diag,3000);
 loadTok();paintChoice();whoami(false);diag();
 })();
 </script>
+<script src="https://lang.opensourceorchestra.org/lang.js" data-side="right" data-top="10" async></script>
 </body></html>
