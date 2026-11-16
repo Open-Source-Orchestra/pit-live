@@ -24,7 +24,8 @@ It is one Cloudflare Worker + one KV namespace + a Cloudflare Realtime SFU app, 
 1. Fork this repo. You need a Cloudflare account with Workers + KV, and **Realtime** (SFU) enabled.
 2. `cp wrangler.example.jsonc wrangler.jsonc` → set your Worker name, your domain (or use workers.dev) and a KV
    namespace id (`npx wrangler kv namespace create LIVE`).
-3. Create a Realtime SFU app (dash → Realtime → SFU, or `CF_ACCOUNT_ID=… ./setup-realtime.sh <token>`), then:
+3. Create a Realtime SFU app (dash → Realtime → SFU, or `CF_ACCOUNT_ID=… ./setup-realtime.sh < token-file`;
+   the token goes on stdin, never as an argument, because argv is visible to other processes), then:
    ```
    npx wrangler secret put CALLS_APP_ID
    npx wrangler secret put CALLS_APP_SECRET
