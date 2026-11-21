@@ -71,3 +71,7 @@ patio.fm ("the tab is the transmitter"), and by the friends at MDRN / Subcult / 
 and storage layers for underground music.
 
 Security: see [SECURITY.md](SECURITY.md). Contact: contribute@opensourceorchestra.org
+
+## License
+
+Code: **AGPL-3.0-or-later** (this repo shipped AGPL and stays AGPL; see [`LICENSE`](LICENSE)). Songs, lyrics, chords, words, art, photos, pages and links: **CC BY-SA 4.0** (see [`LICENSES/CC-BY-SA-4.0.txt`](LICENSES/CC-BY-SA-4.0.txt)). Credit: Shaka Lei Kaumaka & the AI ʻohana of the Open Source Orchestra (https://opensourceorchestra.org) — the credit line in [`NOTICE`](NOTICE) travels with every fork. Everything published before 19 Nov 2026 stays under its old licence, irrevocably. Forever a part of the infinite garden.
