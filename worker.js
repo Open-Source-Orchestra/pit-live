@@ -225,7 +225,7 @@ export default {
 // ---------------------------------------------------------------- WIDGET
 const WIDGET_JS = `(function(){
 if(window.__pitLive)return;window.__pitLive=1;
-var BASE='https://live.zuchiangmai.app';window.__pitLiveBase=BASE;var el=null,audio=null,st=null,on=false;
+var BASE='https://live.zuchiangmai.app';window.__pitLiveBase=BASE;var el=null,audio=null,st=null,on=false,lastT=0;
 function esc(s){return String(s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function pick(s){var a=(s.sources||[]).filter(function(x){return x.type==='audio'})[0];var v=(s.sources||[]).filter(function(x){return x.type==='hls'})[0];return {audio:a,video:v}}
 function decide(s){return Promise.resolve(s.on_air===true?true:s.on_air===false?false:!!s.live)}
@@ -245,9 +245,12 @@ function toggle(){var b=el.querySelector('#plw-play');var p=pick(st);
  window.open(BASE+'/','_blank','noopener');
 }
 function tick(){try{if(sessionStorage.getItem('pitlive_hide'))return}catch(e){}
+ if(document.hidden&&!audio)return;
+ var now=Date.now();if(now-lastT<4000)return;lastT=now;
  fetch(BASE+'/live.json',{cache:'no-store'}).then(function(r){return r.json()}).then(function(s){st=s;return decide(s)}).then(function(live){on=live;var ss=(st.rt&&st.rt.started_at)||null;if(live){mount();el.querySelector('#plw-t').textContent='· '+((st.rt&&st.rt.message)||st.now_playing||st.subtitle||'');if(audio&&rtpc&&((sess&&ss&&ss!==sess)||/failed|closed/.test(rtpc.connectionState))){toggle();toggle()}}else if(el&&!audio){el.remove();el=null}sess=ss}).catch(function(){});
 }
 tick();setInterval(tick,20000);
+document.addEventListener('visibilitychange',function(){if(!document.hidden)tick()});
 })();`;
 
 // ---------------------------------------------------------------- ADMIN
